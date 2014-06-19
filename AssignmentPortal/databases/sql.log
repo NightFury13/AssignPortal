@@ -1,0 +1,96 @@
+timestamp: 2014-06-19T10:26:45.327355
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512)
+);
+success!
+timestamp: 2014-06-19T10:26:45.485104
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2014-06-19T10:26:45.596979
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2014-06-19T10:26:45.720629
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2014-06-19T10:26:45.845881
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2014-06-19T10:26:46.115895
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2014-06-19T11:16:47.143354
+ALTER TABLE auth_user ADD user_type CHAR(512);
+timestamp: 2014-06-19T11:16:47.336576
+ALTER TABLE auth_user ADD roll_no INTEGER;
+success!
+timestamp: 2014-06-19T11:16:47.492141
+CREATE TABLE Course(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    code CHAR(512)
+);
+success!
+timestamp: 2014-06-19T11:19:05.059963
+CREATE TABLE Assign(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    course INTEGER REFERENCES Course (id) ON DELETE CASCADE,
+    name CHAR(512),
+    start_time TIMESTAMP,
+    end_time TIMESTAMP
+);
+success!
+timestamp: 2014-06-19T11:20:22.344412
+CREATE TABLE Problem(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    assign INTEGER REFERENCES Assign (id) ON DELETE CASCADE,
+    num INTEGER UNIQUE,
+    question CHAR(512),
+    image CHAR(512),
+    tas INTEGER REFERENCES auth_user (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2014-06-19T11:20:22.636964
+CREATE TABLE Submission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    assign INTEGER REFERENCES Assign (id) ON DELETE CASCADE,
+    problem INTEGER REFERENCES Problem (id) ON DELETE CASCADE,
+    image CHAR(512),
+    answer CHAR(512)
+);
+success!
