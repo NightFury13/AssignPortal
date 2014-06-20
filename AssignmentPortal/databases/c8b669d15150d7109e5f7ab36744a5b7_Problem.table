@@ -1,5 +1,5 @@
 (dp1
-S'tas'
+S'num'
 p2
 (dp3
 S'length'
@@ -7,24 +7,47 @@ p4
 I512
 sS'unique'
 p5
-I00
+I01
 sS'sortable'
 p6
-I6
+I3
 sS'sql'
 p7
-S'INTEGER REFERENCES auth_user (id) ON DELETE CASCADE'
+S'INTEGER UNIQUE'
 p8
 sS'notnull'
 p9
 I00
 sS'type'
 p10
-S'reference auth_user'
+S'integer'
 p11
-ssS'image'
+ssS'tas'
 p12
 (dp13
+S'sortable'
+p14
+I6
+sS'sql'
+p15
+S'INTEGER REFERENCES auth_user (id) ON DELETE CASCADE'
+p16
+sS'length'
+p17
+I512
+sS'notnull'
+p18
+I00
+sS'unique'
+p19
+I00
+sS'type'
+p20
+S'reference auth_user'
+p21
+ssS'image'
+p22
+(dp23
 g4
 I512
 sg5
@@ -33,15 +56,15 @@ sg6
 I5
 sg7
 S'CHAR(512)'
-p14
+p24
 sg9
 I00
 sg10
 S'upload'
-p15
+p25
 ssS'question'
-p16
-(dp17
+p26
+(dp27
 g4
 I512
 sg5
@@ -50,15 +73,15 @@ sg6
 I4
 sg7
 S'CHAR(512)'
-p18
+p28
 sg9
 I00
 sg10
 S'string'
-p19
+p29
 ssS'assign'
-p20
-(dp21
+p30
+(dp31
 g4
 I512
 sg5
@@ -67,32 +90,15 @@ sg6
 I2
 sg7
 S'INTEGER REFERENCES Assign (id) ON DELETE CASCADE'
-p22
+p32
 sg9
 I00
 sg10
 S'reference Assign'
-p23
-ssS'num'
-p24
-(dp25
-g4
-I512
-sg5
-I01
-sg6
-I3
-sg7
-S'INTEGER UNIQUE'
-p26
-sg9
-I00
-sg10
-S'integer'
-p27
+p33
 ssS'id'
-p28
-(dp29
+p34
+(dp35
 g4
 I512
 sg5
@@ -101,9 +107,10 @@ sg6
 I1
 sg7
 S'INTEGER PRIMARY KEY AUTOINCREMENT'
-p30
+p36
 sg9
 I00
 sg10
-g28
+S'id'
+p37
 ss.

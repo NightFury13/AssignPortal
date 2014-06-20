@@ -100,8 +100,19 @@ db.define_table('Problem',
 		db.Field('assign',db.Assign,requires=IS_IN_DB(db,'Assign.id','Assign.name')),
 		db.Field('num','integer',required=True,unique=True),
 		db.Field('question','string',required=True),
-		db.Field('image','upload'),
-		db.Field('tas',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name'))
+		db.Field('image','upload')
+		)
+
+
+#Not so sure about this. Plej review#
+db.define_table('TaProb',
+		db.Field('ta',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
+		db.Field('prob',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.num'))
+		)
+
+db.define_table('StudCourse',
+		db.Field('student',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
+		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name'))
 		)
 
 db.define_table('Submission',

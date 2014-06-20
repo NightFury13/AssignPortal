@@ -94,3 +94,31 @@ CREATE TABLE Submission(
     answer CHAR(512)
 );
 success!
+success!
+timestamp: 2014-06-20T10:02:31.505284
+CREATE TABLE TaProb(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ta INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    prob INTEGER REFERENCES Problem (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2014-06-20T10:02:31.718457
+CREATE TABLE StudCourse(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    course INTEGER REFERENCES Course (id) ON DELETE CASCADE
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
