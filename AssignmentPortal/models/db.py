@@ -89,6 +89,10 @@ db.define_table('Course',
 		db.Field('code','string',required=True)
 		)
 
+db.define_table('AutoAssign',
+		db.Field('upfile','upload')
+		)
+
 db.define_table('Assign',
 		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name')),
 		db.Field('name','string',required=True),
@@ -100,7 +104,9 @@ db.define_table('Problem',
 		db.Field('assign',db.Assign,requires=IS_IN_DB(db,'Assign.id','Assign.name')),
 		db.Field('num','integer',required=True,unique=True),
 		db.Field('question','string',required=True),
-		db.Field('image','upload')
+		db.Field('image','upload'),
+		db.Field('start_time','datetime',default=request.now),
+		db.Field('end_time','datetime',default=request.now)
 		)
 
 

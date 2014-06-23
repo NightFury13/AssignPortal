@@ -122,3 +122,27 @@ success!
 success!
 success!
 success!
+success!
+timestamp: 2014-06-23T17:26:29.272076
+CREATE TABLE AutoAssign(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    upfile CHAR(512)
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-06-23T17:59:00.731351
+ALTER TABLE Problem ADD start_time TIMESTAMP;
+timestamp: 2014-06-23T17:59:00.937107
+ALTER TABLE Problem ADD end_time TIMESTAMP;
+success!
+success!
+success!
+success!

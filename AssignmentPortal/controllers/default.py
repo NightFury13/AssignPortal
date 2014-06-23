@@ -21,6 +21,17 @@ def index():
     response.flash = T("Welcome to web2py!")
     return dict(message=T('Hello World'))
 
+def autoAssignment():
+	form = SQLFORM(db.AutoAssign)
+	if form.process().accepted:
+		response.flash = 'assignment added'
+		redirect(URL(r=request,f='index'))
+	elif form.errors:
+		response.flash = 'upload has errors'
+	else:
+		response.flash = 'upload the assignment'
+	
+	return dict(form=form)
 
 def user():
     """
