@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<assignment num="1" start="2014-06-24 17:50:44" end="2015-06-25 17:50:44" ccode="CS201">
+
+	<!--Now add on the below for new questions-->
+	<question num="1" start="2014-06-24 17:50:44" end="2015-06-24 17:50:44" difficulty="1">
+		<ta><!--roll num--></ta>					
+		<image><!--src--></image>
+		<statement><!--body goes here--></statement>
+	</question>
+	<!-- copy paste above code for more questions-->
+
+</assignment>

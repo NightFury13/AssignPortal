@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<assignment num="1" start="" end="" ccode="ICS201">
+
+	<!--Now add on the below for new questions-->
+	<question num="" start="" end="">
+		<ta><!--roll1,roll2...--></ta>					
+		<difficulty><!--level[0,5]--></difficulty>
+		<image><!--src--></image>
+		<statement><!--body goes here--></statement>
+	</question>
+	<!-- copy paste above code for more questions-->
+
+</assignment>
