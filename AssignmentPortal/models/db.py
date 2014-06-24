@@ -84,18 +84,20 @@ use_janrain(auth, filename='private/janrain.key')
 ## >>> for row in rows: print row.id, row.myfield
 #########################################################################
 
+import os
+
 db.define_table('Course',
 		db.Field('name','string',required=True),
 		db.Field('code','string',required=True)
 		)
 
 db.define_table('AutoAssign',
-		db.Field('upfile','upload')
+		db.Field('upfile','upload',uploadfolder=os.path.join(request.folder,'temps/assignment'))
 		)
 
 db.define_table('Assign',
 		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name')),
-		db.Field('name','string',required=True),
+		db.Field('num','integer',required=True),
 		db.Field('start_time','datetime',default=request.now),
 		db.Field('end_time','datetime',default=request.now)
 		)
@@ -108,7 +110,6 @@ db.define_table('Problem',
 		db.Field('start_time','datetime',default=request.now),
 		db.Field('end_time','datetime',default=request.now)
 		)
-
 
 #Not so sure about this. Plej review#
 db.define_table('TaProb',
