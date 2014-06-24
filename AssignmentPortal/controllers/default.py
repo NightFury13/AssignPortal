@@ -9,6 +9,8 @@
 ## - call exposes all registered services (none by default)
 #########################################################################
 
+import os
+import xml.etree.ElementTree as ET
 
 def index():
     """
@@ -18,20 +20,55 @@ def index():
     if you need a simple wiki simply replace the two lines below with:
     return auth.wiki()
     """
-    response.flash = T("Welcome to web2py!")
+    msg = request.vars['msg']    
+    if not msg:
+	    msg = 'Welcome'
+    response.flash = T(msg)
     return dict(message=T('Hello World'))
 
 def autoAssignment():
 	form = SQLFORM(db.AutoAssign)
 	if form.process().accepted:
+		filename = form.vars.upfile	
 		response.flash = 'assignment added'
-		redirect(URL(r=request,f='index'))
+		msg = processFile(filename)
+		redirect(URL(r=request,f='index?msg='+msg))
 	elif form.errors:
 		response.flash = 'upload has errors'
 	else:
 		response.flash = 'upload the assignment'
 	
 	return dict(form=form)
+
+def processFile(filename):
+		msg = ''
+#	try:
+		tree = ET.parse(os.path.join(request.folder,'temps/assignment/'+filename))
+		root = tree.getroot()
+		course_code = root.attrib['ccode']
+		course_id = db(db.Course.code == course_code).select(db.Course.id,db.Course.id)[0]
+		assign_num = root.attrib['num']
+		assign_start_time = root.attrib['start']
+		assign_end_time = root.attrib['end']
+		assign_id = db.Assign.insert(course=course_id,num=assign_num,start_time=assign_start_time,end_time=assign_end_time)
+		
+		for child in root:
+			prob_num = child.attrib['num']
+			prob_statement = child[2].text
+			prob_image = child[1].text
+			prob_st_time = child.attrib['start']
+			prob_end_time = child.attrib['end']
+			prob_id = db.Problem.insert(assign=assign_id,num=prob_num,question=prob_statement,image=prob_image,start_time=prob_st_time,end_time=prob_end_time)
+			
+			ta_list = (child[0].text).split(',')
+		
+			for ta_roll in ta_list:
+				ta_id = db(str(db.auth_user.roll_no) == ta_roll).select(db.auth_user.id,db.auth_user.id)[0]
+				db.TaProb.insert(ta=ta_id,prob=prob_id)
+		msg = 'Assignment Uploaded'
+#	except:
+#		msg = 'xml-file parse failed'
+		return msg
 
 def user():
     """
