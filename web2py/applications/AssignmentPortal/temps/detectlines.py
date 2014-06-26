@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from shapely.geometry import LineString
+from operator import itemgetter
 
 verline=[]#LineString(i for i in vertical_lines)
 horline=[]#LineString(i for i in horizontal_lines)
@@ -39,7 +40,7 @@ for rho,theta in lines[0]:
     x2 = int(x0 - 2000*(-b))
     y2 = int(y0 - 2000*(a))
     verline.append([(x1,y1),(x2,y2)])
-    cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2)
+    #cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2) #too check
 
 del lines
 lines = cv2.HoughLines(edges,0.5,(2*(np.pi))/180,200)
@@ -68,8 +69,38 @@ for rho,theta in lines[0]:
     y1 = int(y0 + 2000*(a))
     x2 = int(x0 - 2000*(-b))
     y2 = int(y0 - 2000*(a))
-    horline.append([(x1,y1),(x2,y2)])
-    cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2)
-
+    #cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2) #to check
+horizontal_lines = sorted(horizontal_lines,key=itemgetter(0),reverse=True)[0]
+theta=horizontal_lines[1]
+rho =horizontal_lines[0]
+a = np.cos(theta)
+b = np.sin(theta)
+x0 = a*rho
+y0 = b*rho
+x1 = int(x0 + 2000*(-b))
+y1 = int(y0 + 2000*(a))
+x2 = int(x0 - 2000*(-b))
+y2 = int(y0 - 2000*(a))
+horline.append([(x1,y1),(x2,y2)])
+all_points=[]
 cv2.imwrite('output.jpg',img)
+for i in horline:
+    for j in verline:
+         temp=(LineString(i).intersection(LineString(j)))
+         all_points.append([temp.x,temp.y])
+all_points = sorted(all_points,key=itemgetter(0))
+c1=0
+c2=0
+count=1
+print all_points
+for i in range(len(all_points)):
+    print c2,all_points[i][0]
+    cropimg=img[c1:all_points[i][1],c2:all_points[i][0]]
+    cv2.imwrite("part"+str(i+1)+".jpg", cropimg)
+    c2=all_points[i][0]
+
+print img.shape
+print all_points[i][0]
+cropimg=img[all_points[i][1]:img.shape[0],0:img.shape[1]]
+cv2.imwrite("part"+str(i+2)+".jpg", cropimg)
 print "output image saved in output.jpg"
