@@ -46,7 +46,7 @@ del lines
 lines = cv2.HoughLines(edges,0.5,(2*(np.pi))/180,200)
 for rho,theta in lines[0]:
     if(((theta*180)/np.pi)<30):
-        pass
+        continue
     else:
         if(((theta*180)/np.pi)<89.7) or (((theta*180)/np.pi)>90.3):
             continue
