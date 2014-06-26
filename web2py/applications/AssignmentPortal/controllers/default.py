@@ -41,8 +41,8 @@ def autoAssignment():
 	return dict(form=form)
 
 def processFile(filename):
-		msg = ''
-#	try:
+	msg = ''
+	try:
 		tree = ET.parse(os.path.join(request.folder,'temps/assignment/'+filename))
 		root = tree.getroot()
 		course_code = root.attrib['ccode']
@@ -66,9 +66,9 @@ def processFile(filename):
 				ta_id = db(str(db.auth_user.roll_no) == ta_roll).select(db.auth_user.id,db.auth_user.id)[0]
 				db.TaProb.insert(ta=ta_id,prob=prob_id)
 		msg = 'Assignment Uploaded'
-#	except:
-#		msg = 'xml-file parse failed'
-		return msg
+	except:
+		msg = 'xml-file parse failed'
+	return msg
 
 def user():
     """
