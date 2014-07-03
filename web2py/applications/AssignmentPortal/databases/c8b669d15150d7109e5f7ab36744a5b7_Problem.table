@@ -62,7 +62,7 @@ I00
 sg20
 S'string'
 p25
-ssS'assign'
+ssS'id'
 p26
 (dp27
 g14
@@ -70,14 +70,14 @@ I512
 sg15
 I00
 sg16
-I2
+I1
 sg17
-S'INTEGER REFERENCES Assign (id) ON DELETE CASCADE'
+S'INTEGER PRIMARY KEY AUTOINCREMENT'
 p28
 sg19
 I00
 sg20
-S'reference Assign'
+S'id'
 p29
 ssS'num'
 p30
@@ -129,7 +129,7 @@ I00
 sg20
 S'upload'
 p40
-ssS'id'
+ssS'assign'
 p41
 (dp42
 g14
@@ -137,13 +137,13 @@ I512
 sg15
 I00
 sg16
-I1
+I2
 sg17
-S'INTEGER PRIMARY KEY AUTOINCREMENT'
+S'INTEGER REFERENCES Assign (id) ON DELETE CASCADE'
 p43
 sg19
 I00
 sg20
-S'id'
+S'reference Assign'
 p44
 ss.

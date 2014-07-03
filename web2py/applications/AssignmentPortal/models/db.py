@@ -109,6 +109,11 @@ db.define_table('AutoAssign',
 		db.Field('upfile','upload',uploadfolder=os.path.join(request.folder,'temps/assignment'))
 		)
 
+db.define_table('UploadedAssign',
+		db.Field('filename','upload',uploadfolder=os.path.join(request.folder,'temps/assignment/tar')),
+                db.Field('student',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name'))
+		)
+
 db.define_table('Assign',
 		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name')),
 		db.Field('num','integer',required=True),

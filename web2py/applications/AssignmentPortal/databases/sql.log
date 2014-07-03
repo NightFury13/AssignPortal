@@ -150,3 +150,10 @@ timestamp: 2014-06-24T19:16:40.604153
 ALTER TABLE Assign ADD num INTEGER;
 timestamp: 2014-06-24T19:22:03.117579
 ALTER TABLE auth_user ADD username CHAR(128);
+timestamp: 2014-07-03T12:35:26.893244
+CREATE TABLE UploadedAssign(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    filename CHAR(512),
+    student INTEGER REFERENCES auth_user (id) ON DELETE CASCADE
+);
+success!

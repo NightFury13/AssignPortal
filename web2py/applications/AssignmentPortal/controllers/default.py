@@ -10,6 +10,7 @@
 #########################################################################
 
 import os
+import tarfile
 import xml.etree.ElementTree as ET
 
 def index():
@@ -40,6 +41,35 @@ def autoAssignment():
 	
 	return dict(form=form)
 
+def uploadAssignment():
+    form=SQLFORM(db.UploadedAssign)
+    form.vars.student=auth.user.id
+    if form.process().accepted:
+        filename=form.vars.filename
+        msg=processTar(filename)
+        redirect(URL(r=request,f='index?msg='+msg))
+    elif form.errors:
+        response.flash='Form Error!'
+    return dict(form=form)
+
+def processTar(filename):
+    tar=tarfile.open(os.path.join(request.folder,'temps/assignment/tar/'+filename))
+    expath=os.path.join(request.folder,'temps/assignment/tar/parse/'+filename.split('.')[2])
+    os.makedirs(expath)
+    tar.extractall(path=expath)
+    tree=ET.parse(os.path.join(expath,'meta.xml'))
+    root=tree.getroot()
+    course_code=root.attrib['ccode']
+    course_id=db(db.Course.code==course_code).select(db.Course.id)[0]
+    assign_num=root.attrib['num']
+    assign_id=db((db.Assign.num==assign_num) & (db.Assign.course==course_id)).select(db.Assign.id)[0]
+    for problem in root.findall('problem'):
+        prob_id=problem.attrib['id']
+        img_path=os.path.join(expath,problem.find('img').text)
+        answer_text=problem.find('text').text
+        db.Submission.insert(student=auth.user.id,assign=assign_id,problem=prob_id,image=img_path,answer=answer_text)
+    return 'Upload Successful'
+
 def processFile(filename):
 	msg = ''
 	try:
@@ -54,13 +84,13 @@ def processFile(filename):
 		
 		for child in root:
 			prob_num = child.attrib['num']
-			prob_statement = child[2].text
-			prob_image = child[1].text
+			prob_statement = child.find('statement').text
+			prob_image = child.find('image').text
 			prob_st_time = child.attrib['start']
 			prob_end_time = child.attrib['end']
 			prob_id = db.Problem.insert(assign=assign_id,num=prob_num,question=prob_statement,image=prob_image,start_time=prob_st_time,end_time=prob_end_time)
 			
-			ta_list = (child[0].text).split(',')
+			ta_list = (child.find('ta').text).split(',')
 		
 			for ta_roll in ta_list:
 				ta_id = db(str(db.auth_user.roll_no) == ta_roll).select(db.auth_user.id,db.auth_user.id)[0]
