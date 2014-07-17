@@ -12,6 +12,7 @@
 import os
 import tarfile
 import xml.etree.ElementTree as ET
+import threading
 
 def index():
     """
@@ -47,8 +48,12 @@ def uploadTarBall():
 		filename = form.vars.upfile
 		course = form.vars.course
 		assign = form.vars.assign
-		response.flash = 'file uploaded successfully, extracting images now. Please wait...'
-		msg = extractTarBall(filename,course,assign)
+		msg = 'file uploaded successfully, extracting images now. It might take some time...'
+		try:
+			extractThread = threading.Thread(target=extractTarBall,args=(filename,course,assign))
+			extractThread.start()
+		except:
+			msg = 'background process creation for image extraction failed'
 		redirect(URL(r=request,f='index?msg='+msg))
 	elif form.errors:
 		response.flash = 'upload has errors'
@@ -64,10 +69,9 @@ def extractTarBall(filename,course,assign):
 		expath = os.path.join(request.folder,'temps/solution/parse/'+course+assign) #The folder is stored as coursename+assignname(to avoid confusion)
 		os.makedirs(expath)
 		tar.extractall(path=expath)
-		msg = 'images successfully extracted'
+		response.flash = 'images successfully extracted'
 	except :
-		msg = 'image extraction from folder '+course+assign+' failed!'
-	return msg
+		response.flash = 'image extraction from folder '+course+assign+' failed!'
 
 def uploadAssignment():
     form=SQLFORM(db.UploadedAssign)
