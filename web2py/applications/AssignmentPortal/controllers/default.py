@@ -37,9 +37,37 @@ def autoAssignment():
 	elif form.errors:
 		response.flash = 'upload has errors'
 	else:
-		response.flash = 'upload the assignment'
+		response.flash = 'upload the assignment as .xml'
 	
 	return dict(form=form)
+
+def uploadTarBall():
+	form = SQLFORM(db.ImageStack)
+	if form.process().accepted:
+		filename = form.vars.upfile
+		course = form.vars.course
+		assign = form.vars.assign
+		response.flash = 'file uploaded successfully, extracting images now. Please wait...'
+		msg = extractTarBall(filename,course,assign)
+		redirect(URL(r=request,f='index?msg='+msg))
+	elif form.errors:
+		response.flash = 'upload has errors'
+	else:
+		response.flash = 'upload the images as a .tar folder'
+
+	return dict(form=form)
+
+def extractTarBall(filename,course,assign):
+	msg = ''
+	try :
+		tar = tarfile.open(os.path.join(request.folder,'temps/solution/'+filename))
+		expath = os.path.join(request.folder,'temps/solution/parse/'+course+assign) #The folder is stored as coursename+assignname(to avoid confusion)
+		os.makedirs(expath)
+		tar.extractall(path=expath)
+		msg = 'images successfully extracted'
+	except :
+		msg = 'image extraction from folder '+course+assign+' failed!'
+	return msg
 
 def uploadAssignment():
     form=SQLFORM(db.UploadedAssign)
