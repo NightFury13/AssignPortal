@@ -47,7 +47,11 @@ def uploadTarBall():
 	if form.process().accepted:
 		filename = form.vars.upfile
 		course = form.vars.course
+		course = db(db.Course.id == course).select(db.Course.name).first()
+		course = course.name
 		assign = form.vars.assign
+		assign = db(db.Assign.id == assign).select(db.Assign.name).first()
+		assign = assign.name
 		msg = 'file uploaded successfully, extracting images now. It might take some time...'
 		try:
 			extractThread = threading.Thread(target=extractTarBall,args=(filename,course,assign))
@@ -66,12 +70,12 @@ def extractTarBall(filename,course,assign):
 	msg = ''
 	try :
 		tar = tarfile.open(os.path.join(request.folder,'temps/solution/'+filename))
-		expath = os.path.join(request.folder,'temps/solution/parse/'+course+assign) #The folder is stored as coursename+assignname(to avoid confusion)
+		expath = os.path.join(request.folder,'temps/solution/parse/'+course+'-'+assign) #The folder is stored as coursename+assignname(to avoid confusion)
 		os.makedirs(expath)
 		tar.extractall(path=expath)
 		response.flash = 'images successfully extracted'
 	except :
-		response.flash = 'image extraction from folder '+course+assign+' failed!'
+		response.flash = 'image extraction from folder '+course+'-'+assign+' failed!'
 
 def uploadAssignment():
     form=SQLFORM(db.UploadedAssign)
