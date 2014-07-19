@@ -52,6 +52,7 @@ def uploadTarBall():
 		assign = form.vars.assign
 		assign = db(db.Assign.id == assign).select(db.Assign.name).first()
 		assign = assign.name
+#		extractTarBall(filename,course,assign)
 		msg = 'file uploaded successfully, extracting images now. It might take some time...'
 		try:
 			extractThread = threading.Thread(target=extractTarBall,args=(filename,course,assign))
@@ -66,6 +67,14 @@ def uploadTarBall():
 
 	return dict(form=form)
 
+def insertImageToDB(imagepath,filename):
+	stream = open(imagepath,'rb')
+	db.Submission.insert(image=db.Submission.image.store(stream,filename))
+	print filename
+	db.commit()
+	stream.close()
+	return
+
 def extractTarBall(filename,course,assign):
 	msg = ''
 	try :
@@ -73,8 +82,15 @@ def extractTarBall(filename,course,assign):
 		expath = os.path.join(request.folder,'temps/solution/parse/'+course+'-'+assign) #The folder is stored as coursename+assignname(to avoid confusion)
 		os.makedirs(expath)
 		tar.extractall(path=expath)
+		for i in os.listdir(expath):
+			imagepath = expath+'/'+i
+			if os.path.isdir(imagepath):
+				for j in os.listdir(imagepath):
+					insertImageToDB(imagepath+'/'+j,j)
+			else:
+				insertImageToDB(imagepath,i)
 		response.flash = 'images successfully extracted'
-	except :
+	except:
 		response.flash = 'image extraction from folder '+course+'-'+assign+' failed!'
 
 def uploadAssignment():
