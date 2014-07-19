@@ -13,7 +13,7 @@ import os
 import tarfile
 import xml.etree.ElementTree as ET
 import threading
-
+from multiprocessing import Process
 def index():
     """
     example action using the internationalization operator T and flash
@@ -52,10 +52,10 @@ def uploadTarBall():
 		assign = form.vars.assign
 		assign = db(db.Assign.id == assign).select(db.Assign.name).first()
 		assign = assign.name
-#		extractTarBall(filename,course,assign)
+#extractTarBall(filename,course,assign)
 		msg = 'file uploaded successfully, extracting images now. It might take some time...'
 		try:
-			extractThread = threading.Thread(target=extractTarBall,args=(filename,course,assign))
+			extractThread = Process(target=extractTarBall,args=(filename,course,assign))
 			extractThread.start()
 		except:
 			msg = 'background process creation for image extraction failed'
