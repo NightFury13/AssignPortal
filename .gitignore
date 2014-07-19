@@ -1,1 +1,8 @@
 *.pyc
+/*
+!.gitignore
+!web2py
+web2py/*
+!web2py/applications/
+web2py/applications/*
+!web2py/applications/AssignmentPortal/
