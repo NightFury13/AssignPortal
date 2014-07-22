@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-# this file is released under public domain and you can use without limitations
 
 #########################################################################
-## This is a sample controller
-## - index is the default action of any application
-## - user is required for authentication and authorization
-## - download is for downloading files uploaded in the db (does streaming)
-## - call exposes all registered services (none by default)
+# @arnav : search for the tag 'To-Do' to see whats to be done. 			#
 #########################################################################
 
 import os
@@ -46,16 +41,18 @@ def uploadTarBall():
 	form = SQLFORM(db.ImageStack)
 	if form.process().accepted:
 		filename = form.vars.upfile
-		course = form.vars.course
-		course = db(db.Course.id == course).select(db.Course.name).first()
+		course_id = form.vars.course
+		course = db(db.Course.id == course_id).select(db.Course.name).first()
 		course = course.name
-		assign = form.vars.assign
-		assign = db(db.Assign.id == assign).select(db.Assign.name).first()
+	    #########################################################################################################
+#To-Do: # This here should only show assignments under the specific course selected. Lookup - Cascaded dropdowns#
+	    #########################################################################################################
+		assign_id = form.vars.assign
+		assign = db(db.Assign.id == assign_id).select(db.Assign.name).first()
 		assign = assign.name
-		#extractTarBall(filename,course,assign)
 		msg = 'file uploaded successfully, extracting images now. It might take some time...'
 		try:
-			extractThread = Process(target=extractTarBall,args=(filename,course,assign))
+			extractThread = Process(target=extractTarBall,args=(filename,course,assign,course_id,assign_id))
 			extractThread.start()
 		except:
 			msg = 'background process creation for image extraction failed'
@@ -67,14 +64,14 @@ def uploadTarBall():
 
 	return dict(form=form)
 
-def insertImageToDB(imagepath,filename):
+def insertImageToDB(imagepath,filename,course_id,assign_id):
 	stream = open(imagepath,'rb')
-	db.Submission.insert(image=db.Submission.image.store(stream,filename))
+	db.Submission.insert(image=db.Submission.image.store(stream,filename),course=course_id,assign=assign_id)
 	db.commit()
 	stream.close()
 	return
 
-def extractTarBall(filename,course,assign):
+def extractTarBall(filename,course,assign,course_id,assign_id):
 	msg = ''
 	try :
 		tar = tarfile.open(os.path.join(request.folder,'temps/solution/'+filename))
@@ -85,46 +82,56 @@ def extractTarBall(filename,course,assign):
 			imagepath = expath+'/'+i
 			if os.path.isdir(imagepath):
 				for j in os.listdir(imagepath):
-					insertImageToDB(imagepath+'/'+j,j)
+					insertImageToDB(imagepath+'/'+j,j,course_id,assign_id)
 			else:
-				insertImageToDB(imagepath,i)
+				insertImageToDB(imagepath,i,course_id,assign_id)
 		try:
-			os.system('rm -rf '+expath.replace(' ','\ '))
+			os.system('rm -rf '+expath.replace(' ','\ ')) # Removes the temporarily stored images and upload file. (verified (Y))
 			os.system('rm '+ os.path.join(request.folder,'temps/solution/'+filename.replace(' ','\ ')))
+			################################################################################################################################
+	#To-Do: # We also need to delete the images from the ImageStack DB, these images lie as a waste. Was initially used to extract the .tar#
+			# This should probably be done when inserting images to the Submission DB. (as there may be more than one user's iamges being  #
+			# loaded at a given time)																									   #
+			################################################################################################################################
 		except:
 			pass
 		response.flash = 'images successfully extracted'
 	except:
 		response.flash = 'image extraction from folder '+course+'-'+assign+' failed!'
 
-def uploadAssignment():
-    form=SQLFORM(db.UploadedAssign)
-    form.vars.student=auth.user.id
-    if form.process().accepted:
-        filename=form.vars.filename
-        msg=processTar(filename)
-        redirect(URL(r=request,f='index?msg='+msg))
-    elif form.errors:
-        response.flash='Form Error!'
-    return dict(form=form)
+######################################################################################################################
+# Jaggi's code #
+################
+#def uploadAssignment():
+#    form=SQLFORM(db.UploadedAssign)
+#    form.vars.student=auth.user.id
+#    if form.process().accepted:
+#        filename=form.vars.filename
+#        msg=processTar(filename)
+#        redirect(URL(r=request,f='index?msg='+msg))
+#    elif form.errors:
+#        response.flash='Form Error!'
+#    return dict(form=form)
 
-def processTar(filename):
-    tar=tarfile.open(os.path.join(request.folder,'temps/assignment/tar/'+filename))
-    expath=os.path.join(request.folder,'temps/assignment/tar/parse/'+filename.split('.')[2])
-    os.makedirs(expath)
-    tar.extractall(path=expath)
-    tree=ET.parse(os.path.join(expath,'meta.xml'))
-    root=tree.getroot()
-    course_code=root.attrib['ccode']
-    course_id=db(db.Course.code==course_code).select(db.Course.id)[0]
-    assign_num=root.attrib['num']
-    assign_id=db((db.Assign.num==assign_num) & (db.Assign.course==course_id)).select(db.Assign.id)[0]
-    for problem in root.findall('problem'):
-        prob_id=problem.attrib['id']
-        img_path=os.path.join(expath,problem.find('img').text)
-        answer_text=problem.find('text').text
-        db.Submission.insert(student=auth.user.id,assign=assign_id,problem=prob_id,image=img_path,answer=answer_text)
-    return 'Upload Successful'
+#def processTar(filename):
+#    tar=tarfile.open(os.path.join(request.folder,'temps/assignment/tar/'+filename))
+#    expath=os.path.join(request.folder,'temps/assignment/tar/parse/'+filename.split('.')[2])
+#    os.makedirs(expath)
+#    tar.extractall(path=expath)
+#    tree=ET.parse(os.path.join(expath,'meta.xml'))
+#    root=tree.getroot()
+#    course_code=root.attrib['ccode']
+#    course_id=db(db.Course.code==course_code).select(db.Course.id)[0]
+#    assign_num=root.attrib['num']
+#    assign_id=db((db.Assign.num==assign_num) & (db.Assign.course==course_id)).select(db.Assign.id)[0]
+#    for problem in root.findall('problem'):
+#        prob_id=problem.attrib['id']
+#        img_path=os.path.join(expath,problem.find('img').text)
+#        answer_text=problem.find('text').text
+#        db.Submission.insert(student=auth.user.id,assign=assign_id,problem=prob_id,image=img_path,answer=answer_text)
+#    return 'Upload Successful'
+
+###########################################################################################################################		 
 
 def processFile(filename):
 	msg = ''
@@ -155,6 +162,25 @@ def processFile(filename):
 	except:
 		msg = 'xml-file parse failed'
 	return msg
+
+	    ############################################################################################
+#To-Do: # Make a form in solutionImageTag.html which sends courseid and assignid to this controller#
+	    ############################################################################################
+
+def solutionImageTag():
+	try:
+		course = request.vars['course']
+		assign = request.vars['assign']
+		response.flash = 'Queries recieved, populating images...'
+		imgs = db(db.Submission.course == course & db.Submission.assign == assign).select()
+		return imgs
+	except:
+		response.flash = 'Please enter the course & assignment fields!'
+
+		#########################################################################################################################
+#To-Do: # Can we use this feature of 'group membership' (used below in controller) for our TA/Admin/Faculty/Student interfaces? #
+		# Never used this before. @auth.requires_membership('group name')														#
+		#########################################################################################################################
 
 def user():
     """

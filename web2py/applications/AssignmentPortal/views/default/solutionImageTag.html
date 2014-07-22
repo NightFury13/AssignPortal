@@ -1,0 +1,21 @@
+{{extend 'layout.html'}}
+
+<p>NOTE : we need to change the below fields to drop-down</p>
+<br/>
+
+<div id='search-box'>
+	<h4>Enter details :</h4> 
+		<form method='get' action="{{=URL('AssignmentPortal','default','solutionImageTag')}}">
+		<input type='text' name='course' value='course-id'><br/>
+		<input type='text' name='assign' value='assign-id'><br/>
+		<input type='submit' value='Submit'>
+	</form>
+</div>
+
+<br/>
+
+<div id='search-result'>
+	{{for img in imgs:}}
+		{{=TAG.img(_width=400, _src=URL(r=request, c='default', f='download', args=[img['image']]))}}<br/>
+	{{pass}}
+</div>
