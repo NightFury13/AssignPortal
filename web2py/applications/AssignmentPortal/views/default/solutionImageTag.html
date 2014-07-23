@@ -15,7 +15,10 @@
 <br/>
 
 <div id='search-result'>
+	{{try:}}
 	{{for img in imgs:}}
 		{{=TAG.img(_width=400, _src=URL(r=request, c='default', f='download', args=[img['image']]))}}<br/>
+	{{pass}}
+	{{except:}}
 	{{pass}}
 </div>

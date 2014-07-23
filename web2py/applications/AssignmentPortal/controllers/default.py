@@ -168,15 +168,18 @@ def processFile(filename):
 	    ############################################################################################
 
 def solutionImageTag():
-	try:
-		course = request.vars['course']
-		assign = request.vars['assign']
-		response.flash = 'Queries recieved, populating images...'
-		imgs = db(db.Submission.course == course & db.Submission.assign == assign).select()
-		return imgs
-	except:
-		response.flash = 'Please enter the course & assignment fields!'
-
+        if request.vars:
+            try:
+                course = request.vars['course']
+                assign = request.vars['assign']
+                response.flash = 'Queries recieved, populating images...'
+                imgs = db(db.Submission.course == course and db.Submission.assign == assign).select()
+                return imgs
+            except:
+                response.flash = 'Please enter the course & assignment fields!'
+                return locals()
+        else:
+                return locals()
 		#########################################################################################################################
 #To-Do: # Can we use this feature of 'group membership' (used below in controller) for our TA/Admin/Faculty/Student interfaces? #
 		# Never used this before. @auth.requires_membership('group name')														#
