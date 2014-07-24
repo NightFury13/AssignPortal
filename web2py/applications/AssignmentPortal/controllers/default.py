@@ -138,12 +138,13 @@ def processFile(filename):
 	try:
 		tree = ET.parse(os.path.join(request.folder,'temps/assignment/'+filename))
 		root = tree.getroot()
+		assign_name = root.attrib['name']
 		course_code = root.attrib['ccode']
 		course_id = db(db.Course.code == course_code).select(db.Course.id,db.Course.id)[0]
 		assign_num = root.attrib['num']
 		assign_start_time = root.attrib['start']
 		assign_end_time = root.attrib['end']
-		assign_id = db.Assign.insert(course=course_id,num=assign_num,start_time=assign_start_time,end_time=assign_end_time)
+		assign_id = db.Assign.insert(course=course_id,num=assign_num,start_time=assign_start_time,end_time=assign_end_time,name=assign_name)
 		
 		for child in root:
 			prob_num = child.attrib['num']
@@ -168,18 +169,21 @@ def processFile(filename):
 	    ############################################################################################
 
 def solutionImageTag():
-        if request.vars:
-            try:
-                course = request.vars['course']
-                assign = request.vars['assign']
-                response.flash = 'Queries recieved, populating images...'
-                imgs = db(db.Submission.course == course and db.Submission.assign == assign).select()
-                return imgs
-            except:
-                response.flash = 'Please enter the course & assignment fields!'
-                return locals()
-        else:
-                return locals()
+	imgs = ''
+	if request.vars:
+		try:
+			course = int(request.vars['course'])
+			assign = int(request.vars['assign'])
+			response.flash = 'Queries recieved, populating images...'
+			imgs = db((db.Submission.course == course) & (db.Submission.assign == assign)).select()
+#			for img in imgs:
+#				print img['image']
+			return locals()
+		except:
+			response.flash = 'Please enter the course & assignment fields!'
+			return locals()
+	else:
+		return locals()
 		#########################################################################################################################
 #To-Do: # Can we use this feature of 'group membership' (used below in controller) for our TA/Admin/Faculty/Student interfaces? #
 		# Never used this before. @auth.requires_membership('group name')														#
