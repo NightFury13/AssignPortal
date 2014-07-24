@@ -169,21 +169,30 @@ def processFile(filename):
 	    ############################################################################################
 
 def solutionImageTag():
-	imgs = ''
-	if request.vars:
-		try:
-			course = int(request.vars['course'])
-			assign = int(request.vars['assign'])
-			response.flash = 'Queries recieved, populating images...'
-			imgs = db((db.Submission.course == course) & (db.Submission.assign == assign)).select()
-#			for img in imgs:
-#				print img['image']
-			return locals()
-		except:
-			response.flash = 'Please enter the course & assignment fields!'
-			return locals()
-	else:
-		return locals()
+    if request.vars:
+        try:
+            course = int(request.vars['course'])
+            assign = int(request.vars['assign'])
+        except:
+            course = int(request.vars['course'][0])
+            assign = int(request.vars['assign'][0])
+        img = db((db.Submission.course == course) & (db.Submission.assign == assign) & (db.Submission.student==None)).select().first()
+        db.Submission.id.readable=False
+        db.Submission.id.writable=False
+        db.Submission.image.readable=False
+        db.Submission.image.writable=False
+        #db.Submission.student="get suggested student"
+        if img:
+            form=SQLFORM(db.Submission,img)
+            if form.process().accepted:
+                session.flash = 'form accepted'
+                redirect(URL(r=request,f='solutionImageTag?course=%s&assign=%s' % (course,assign)))
+            elif form.errors:
+                response.flash = 'form not accepted'
+        else:
+            msg = 'All images taged'
+            redirect(URL(r=request,f='index?msg=%s' % (msg)))
+    return locals()
 		#########################################################################################################################
 #To-Do: # Can we use this feature of 'group membership' (used below in controller) for our TA/Admin/Faculty/Student interfaces? #
 		# Never used this before. @auth.requires_membership('group name')														#

@@ -1,8 +1,23 @@
 {{extend 'layout.html'}}
 
-<p>NOTE : we need to change the below fields to drop-down</p>
+
+{{try:}}
+{{=form}}
 <br/>
 
+<div id='search-result'>
+	{{try:}}
+	{{if img:}}
+	<img src="{{=URL('download',args=img['image'])}}" width=500px/>
+			<br/>
+			<br/>
+		{{pass}}
+		{{except:}}
+	{{pass}}
+</div>
+{{except:}}
+<p>NOTE : we need to change the below fields to drop-down</p>
+<br/>
 <div id='search-box'>
 	<h4>Enter details :</h4> 
 		<form method='get' action="{{=URL('AssignmentPortal','default','solutionImageTag')}}">
@@ -11,15 +26,4 @@
 		<input type='submit' value='Submit'>
 	</form>
 </div>
-
-<br/>
-
-<div id='search-result'>
-	{{if imgs:}}
-		{{for img in imgs:}}
-			<img src="{{=URL('download',args=img['image'])}}" width=500px/>
-			<br/>
-			<br/>
-		{{pass}}
-	{{pass}}
-</div>
+{{pass}}
