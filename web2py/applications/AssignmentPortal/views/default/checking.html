@@ -1,0 +1,17 @@
+{{extend 'layout.html'}}
+
+
+{{try:}}
+{{=form}}
+<br/>
+
+<div id='search-result'>
+	{{try:}}
+		{{if rev:}}
+			<img src="{{=URL('download',args=rev['image'])}}" width=500px />
+			<br/>
+			<br/>
+		{{pass}}
+	{{pass}}
+</div>
+{{pass}}

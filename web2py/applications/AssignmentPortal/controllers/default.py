@@ -185,18 +185,76 @@ def solutionImageTag():
         if img:
             form=SQLFORM(db.Submission,img)
             if form.process().accepted:
-                session.flash = 'form accepted'
+                session.flash = 'solution tagged'
                 redirect(URL(r=request,f='solutionImageTag?course=%s&assign=%s' % (course,assign)))
             elif form.errors:
-                response.flash = 'form not accepted'
+                response.flash = 'error tagging the image'
         else:
-            msg = 'All images taged'
+            msg = 'All images tagged'
             redirect(URL(r=request,f='index?msg=%s' % (msg)))
     return locals()
+
+@auth.requires_login()
+def TAinterface():
+	if auth.user.usertype == 'TA':
+		problems = ''
+		if request.vars:
+			try:
+				assign = int(request.vars['assign'])
+			except:
+				assign = int(request.vars['assign'][0])
+			problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == assign)).select(db.Problem.id,db.Problem.question)
+	else:
+		msg = 'Access Denied!'
+		redirect(URL(r=request,f='index?msg=%s' % (msg)))
+	return locals()
+
+@auth.requires_login()
+def checking():
+	if auth.user.usertype == 'TA':
+		if request.vars:
+			try:
+				prob = int(request.vars['problem'])
+			except:
+				prob = int(request.vars['problem'][0])
+			
+			db.SubmitReview.id.readable=False
+			db.SubmitReview.id.writable=False
+			db.SubmitReview.student.readable=False
+			db.SubmitReview.student.writable=False
+			db.SubmitReview.ta.readable=False
+			db.SubmitReview.ta.writable=False
+			db.SubmitReview.problem.readable=False
+			db.SubmitReview.problem.writable=False 
+	
+			vals = db((db.Submission.problem == prob) & (db.Submission.marked == None)).select().first()
+			rev_id = db.SubmitReview.insert(assign=vals['assign'],student=vals['student'],ta=auth.user_id,problem=prob,image=vals['image'])
+
+			if rev_id:
+				rev = db(db.SubmitReview.id == rev_id).select().first()
+				form = SQLFORM(db.SubmitReview,rev)
+				if form.process().accepted:
+					session.flash = 'Marks entered succesfully'
+					db(db.Submission.id == vals['id']).update(marked = True)
+					redirect(URL(r=request,f='checking?problem=%d' %(prob)))
+				else:
+					session.flash = 'Error entering the marks'
+			else:
+				session.flash = 'All solutions checked!'
+				redirect(URL(r=request,f='TAinterface'))
+		else:
+			response.flash = 'Click on one of the assigned problems'
+			redirect(URL(r=request,f='TAinterface'))
+	else:
+		msg = 'Access Denied!'
+		redirect(URL(r=request,f='index?msg=%s' % (msg)))
+	return locals()
+
 		#########################################################################################################################
 #To-Do: # Can we use this feature of 'group membership' (used below in controller) for our TA/Admin/Faculty/Student interfaces? #
 		# Never used this before. @auth.requires_membership('group name')														#
 		#########################################################################################################################
+	
 
 def user():
     """

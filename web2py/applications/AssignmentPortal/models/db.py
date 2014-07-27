@@ -46,8 +46,8 @@ auth = Auth(db)
 from gluon.contrib.login_methods.cas_auth import CasAuth
 
 auth.settings.extra_fields['auth_user'] = [
-		Field('user_type',requires=IS_IN_SET(['Student','TA','Faculty','Admin']),default='Student'),
-		Field('roll_no','integer')]
+		Field('usertype',requires=IS_IN_SET(['Student','TA','Faculty','Admin']),default='Student'),
+		Field('rollno','integer')]
 
 crud, service, plugins = Crud(db), Service(), PluginManager()
 
@@ -144,7 +144,8 @@ db.define_table('Submission',
 		db.Field('assign',db.Assign,requires=IS_IN_DB(db,'Assign.id','Assign.name')),
 		db.Field('problem',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.num')),
 		db.Field('image','upload'),
-		db.Field('answer','string')
+		db.Field('answer','string'),
+		db.Field('marked','boolean')
 		)
 
 db.define_table('AutoAssign',
@@ -156,6 +157,17 @@ db.define_table('ImageStack',
 		db.Field('assign',db.Assign,requires=IS_IN_DB(db,'Assign.id','Assign.name')),
 		db.Field('upfile','upload',uploadfolder=os.path.join(request.folder,'temps/solution'))
 		)
+
+db.define_table('SubmitReview',
+		db.Field('assign',db.Assign,requires=IS_IN_DB(db,'Assign.id','Assign.name')),
+		db.Field('student',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
+		db.Field('ta',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
+		db.Field('problem',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.num')),
+		db.Field('image','upload'),
+		db.Field('marks','double'),
+		db.Field('comments','text')
+		)
+		
 
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)

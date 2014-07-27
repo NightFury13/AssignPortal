@@ -1,0 +1,19 @@
+{{extend 'layout.html'}}
+
+<div id='search-box'>
+	<h4>Enter details :</h4> 
+		<form method='get' action="{{=URL('AssignmentPortal','default','TAinterface')}}">
+		<input type='text' name='assign' value='assign-id'><br/>
+		<input type='submit' value='Submit'>
+	</form>
+</div>
+
+{{if problems:}}
+	<h3>Problems Assigned :</h3>
+	{{for problem in problems:}}
+		<a href="{{=URL('AssignmentPortal','default','checking')}}?problem={{=problem['id']}}">{{=problem['question']}}</a>
+		<br/><br/>
+	{{pass}}
+{{else:}}
+	<h5> No problems assigned to you in this assignment! </h5>
+{{pass}}
