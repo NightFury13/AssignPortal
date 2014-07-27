@@ -218,7 +218,8 @@ def checking():
 			except:
 				prob = int(request.vars['problem'][0])
 			
-			db.SubmitReview.id.readable=False
+			submission = db((db.Submission.problem == prob) & (db.Submission.marked == None)).select().first()
+                        db.SubmitReview.id.readable=False
 			db.SubmitReview.id.writable=False
 			db.SubmitReview.student.readable=False
 			db.SubmitReview.student.writable=False
@@ -226,26 +227,23 @@ def checking():
 			db.SubmitReview.ta.writable=False
 			db.SubmitReview.problem.readable=False
 			db.SubmitReview.problem.writable=False 
-			db.SubmitReview.image.readable=False
-			db.SubmitReview.image.writable=False
 			db.SubmitReview.assign.readable=False
 			db.SubmitReview.assign.writable=False
-
-			vals = db((db.Submission.problem == prob) & (db.Submission.marked == None)).select().first()
-			rev_id = db.SubmitReview.insert(assign=vals['assign'],student=vals['student'],ta=auth.user_id,problem=prob,image=vals['image'])
-
-			if rev_id:
-				rev = db(db.SubmitReview.id == rev_id).select().first()
-				form = SQLFORM(db.SubmitReview,rev)
-				if form.process().accepted:
-					session.flash = 'Marks entered succesfully'
-					db(db.Submission.id == vals['id']).update(marked = True)
-					redirect(URL(r=request,f='checking?problem=%d' %(prob)))
-				else:
-					session.flash = 'Error entering the marks'
+			if submission:
+                           db.SubmitReview.assign.default=submission['assign']
+                           db.SubmitReview.student.default=submission['student']
+                           db.SubmitReview.ta.default=auth.user_id
+                           db.SubmitReview.problem.default=prob
+                           form = SQLFORM(db.SubmitReview)
+                           if form.process().accepted:
+                               session.flash = 'Marks entered succesfully'
+                               db(db.Submission.id == submission['id']).update(marked = True)
+                               redirect(URL(r=request,f='checking?problem=%d' %(prob)))
+                           else:
+                               session.flash = 'Error entering the marks'
 			else:
-				session.flash = 'All solutions checked!'
-				redirect(URL(r=request,f='TAinterface'))
+                            session.flash = 'All solutions checked!'
+                            redirect(URL(r=request,f='TAinterface'))
 		else:
 			response.flash = 'Click on one of the assigned problems'
 			redirect(URL(r=request,f='TAinterface'))
