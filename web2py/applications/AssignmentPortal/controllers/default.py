@@ -226,7 +226,11 @@ def checking():
 			db.SubmitReview.ta.writable=False
 			db.SubmitReview.problem.readable=False
 			db.SubmitReview.problem.writable=False 
-	
+			db.SubmitReview.image.readable=False
+			db.SubmitReview.image.writable=False
+			db.SubmitReview.assign.readable=False
+			db.SubmitReview.assign.writable=False
+
 			vals = db((db.Submission.problem == prob) & (db.Submission.marked == None)).select().first()
 			rev_id = db.SubmitReview.insert(assign=vals['assign'],student=vals['student'],ta=auth.user_id,problem=prob,image=vals['image'])
 
