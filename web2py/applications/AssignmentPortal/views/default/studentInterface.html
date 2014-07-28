@@ -1,0 +1,28 @@
+{{extend 'layout.html'}}
+<div id='search-box'>
+	<h4>Enter details :</h4> 
+	<form method='get' action="{{=URL('AssignmentPortal','default','studentInterface')}}">
+		<input type='text' name='course' value='course-id'><br/>
+		<input type='text' name='assign' value='assign-id'><br/>
+		<input type='submit' value='Submit'>
+	</form>
+</div>
+<br/>
+<div id='search-result'>
+	{{if userData:}}
+		<h4>Submission :</h4>
+		{{for submission in userData:}}
+			<div id='sub'>
+				<div id='sub-image' style='float:left'>
+					<img src="{{=URL('download',args=submission['Submission']['image'])}}"/>
+				</div>
+				<div id='sub-comments' style='float:right'>
+					<p>Marks : {{=submission['SubmitReview']['marks']}}</p><br/>
+					<p>Comment : {{=submission['SubmitReview']['comments']}}</p><br/>
+				</div>
+			</div>
+		{{pass}}
+	{{else:}}
+		<h4>No submission for this assignment</h4>
+	{{pass}}
+</div>

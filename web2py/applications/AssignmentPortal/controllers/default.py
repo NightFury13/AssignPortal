@@ -219,7 +219,7 @@ def checking():
 				prob = int(request.vars['problem'][0])
 			
 			submission = db((db.Submission.problem == prob) & (db.Submission.marked == None)).select().first()
-                        db.SubmitReview.id.readable=False
+			db.SubmitReview.id.readable=False
 			db.SubmitReview.id.writable=False
 			db.SubmitReview.student.readable=False
 			db.SubmitReview.student.writable=False
@@ -250,6 +250,22 @@ def checking():
 	else:
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
+	return locals()
+
+@auth.requires_login()
+def studentInterface():
+	if request.vars:
+		try:
+			course = int(request.vars['course'])
+			assign = int(request.vars['assign'])
+		except:
+			course = int(request.vars['course'][0])
+			assign = int(request.vars['assign'][0])
+		
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)	
+	else:	
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)
+	
 	return locals()
 
 		#########################################################################################################################
