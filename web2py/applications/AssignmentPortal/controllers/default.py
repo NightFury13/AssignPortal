@@ -268,6 +268,24 @@ def studentInterface():
 	
 	return locals()
 
+@auth.requires_login()
+def facultyInterface():
+	if auth.user.usertype == 'Faculty':
+		if request.vars:
+			try:
+				course = int(request.vars['course'])
+			except:
+				course = int(request.vars['course'][0])
+
+			facData = db((db.FacCourse.faculty == auth.user.id) & (db.FacCourse.course == course) & (db.Assign.course == course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code, orderby = db.Course.id)
+		else:
+			facData = db((db.FacCourse.faculty == auth.user.id) & (db.Assign.course == db.FacCourse.course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code, orderby = db.Course.id)
+	else:
+		msg = 'Access Denied!'
+		redirect(URL(r=request,f='index?msg=%s' % (msg)))
+	return locals()
+		
+		
 		#########################################################################################################################
 #To-Do: # Can we use this feature of 'group membership' (used below in controller) for our TA/Admin/Faculty/Student interfaces? #
 		# Never used this before. @auth.requires_membership('group name')														#

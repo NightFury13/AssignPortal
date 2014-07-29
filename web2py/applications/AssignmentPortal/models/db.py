@@ -127,7 +127,6 @@ db.define_table('Problem',
 		db.Field('end_time','datetime',default=request.now)
 		)
 
-#Not so sure about this. Plej review#
 db.define_table('TaProb',
 		db.Field('ta',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
 		db.Field('prob',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.num'))
@@ -136,6 +135,11 @@ db.define_table('TaProb',
 db.define_table('StudCourse',
 		db.Field('student',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
 		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name'))
+		)
+
+db.define_table('FacCourse',
+		db.Field('faculty',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
+		db.Field('course',db.auth_user,requires=IS_IN_DB(db,'Course.id','Course.name'))
 		)
 
 db.define_table('Submission',

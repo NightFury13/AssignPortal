@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<assignment num="1" start="2014-06-24 17:50:44" end="2015-06-25 17:50:44" ccode="CS201">
+<assignment name="assignment 1" num="1" start="2014-06-24 17:50:44" end="2015-06-25 17:50:44" ccode="CS201">
 
 	<!--Now add on the below for new questions-->
 	<question num="1" start="2014-06-24 17:50:44" end="2015-06-24 17:50:44" difficulty="1">
-		<ta>201202164,201202164</ta>					
+		<ta>201202164</ta>					
 		<image>None</image>
-		<statement>What is the time complexity of Binary Search ALgorithm?</statement>
+		<statement>What is the time complexity of Binary Search Algorithm?</statement>
 	</question>
 	<!-- copy paste above code for more questions-->
 
