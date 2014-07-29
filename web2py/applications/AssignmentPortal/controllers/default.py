@@ -271,15 +271,25 @@ def studentInterface():
 @auth.requires_login()
 def facultyInterface():
 	if auth.user.usertype == 'Faculty':
-		if request.vars:
+		assign = None
+		if request.vars['assign']:
+			try:
+				assign = int(request.vars['assign'])
+				assignName = db(db.Assign.id == assign).select(db.Assign.name)[0]['name']
+				assignData = db(db.Problem.assign == assign).select()
+			except:
+				assign = int(request.vars['assign'][0])
+				assignName = db(db.Assign.id == assign).select(db.Assign.name)[0]['name']
+				assignData = db(db.Problem.assign == assign).select()
+		if request.vars['course']:
 			try:
 				course = int(request.vars['course'])
 			except:
 				course = int(request.vars['course'][0])
 
-			facData = db((db.FacCourse.faculty == auth.user.id) & (db.FacCourse.course == course) & (db.Assign.course == course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code, orderby = db.Course.id)
+			facData = db((db.FacCourse.faculty == auth.user.id) & (db.FacCourse.course == course) & (db.Assign.course == course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code,db.Course.id, orderby = db.Course.id)
 		else:
-			facData = db((db.FacCourse.faculty == auth.user.id) & (db.Assign.course == db.FacCourse.course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code, orderby = db.Course.id)
+			facData = db((db.FacCourse.faculty == auth.user.id) & (db.Assign.course == db.FacCourse.course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code,db.Course.id, orderby = db.Course.id)
 	else:
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))

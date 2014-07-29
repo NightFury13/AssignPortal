@@ -14,19 +14,33 @@
 	</form>
 </div>
 <br/>
+<br/>
+{{if assign:}}
+	<div id='assign-details'>
+		<h4>{{=assignName}}</h4>
+		<ul>
+		{{for problem in assignData:}}
+			<li>Q.{{=problem['num']}} {{=problem['question']}}</li>
+		{{pass}}
+		</ul>
+	</div>
+{{pass}}
+<br/>
+<br/>
 <div id='search-result'>
 	{{if facData:}}
 		<div id='course-details'>
 		{{prev = ''}}
 		<ul>
-		{{for course in facData:}}
-			{{if course['Course']['name'] != prev:}}
+		{{for row in facData:}}
+			{{if row['Course']['name'] != prev:}}
 				</ul>
-				<h4>{{=course['Course']['name']}} - {{=course['Course']['code']}}</h4>
+				<h4>{{=row['Course']['name']}} - {{=row['Course']['code']}}</h4>
 				<ul>
 			{{pass}}
-			<li> {{=course['Assign']['name']}} </li>
+			<li> <a href="{{=URL('AssignmentPortal','default','facultyInterface')}}?assign={{=row['Assign']['id']}}">{{=row['Assign']['name']}}</a> </li>
 		{{pass}}
+		</ul>
 		</div>
 	{{else:}}
 		<h4> No assignments for this course </h4>
