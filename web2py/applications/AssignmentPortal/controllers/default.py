@@ -38,6 +38,20 @@ def autoAssignment():
 	return dict(form=form)
 
 def uploadTarBall():
+	req_course = request.vars['course']
+	if req_course:
+		try:
+			course = db(db.Course.id == req_course).select()
+			if len(course):
+				all_assigns = {}
+				course = course[0]
+				print course
+				assigns = db(db.Assign.course == course).select()
+				for x in range(len(assigns)):
+					all_assigns[x+1] = assigns[x].name
+					db.ImageStack.assign.requires = IS_IN_SET(all_assigns)
+		except:
+			pass
 	form = SQLFORM(db.ImageStack)
 	if form.process().accepted:
 		filename = form.vars.upfile
