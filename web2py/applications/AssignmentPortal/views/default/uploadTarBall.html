@@ -1,3 +1,19 @@
 {{extend 'layout.html'}}
 
 {{=form}}
+<script>
+window.onload=function() {
+	function getUrlVars() {
+		var vars = {};
+		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+				vars[key] = value;
+				});
+		return vars;
+	}
+	selects = document.getElementById('ImageStack_course');
+	selects.value=getUrlVars()["course"];
+	selects.onchange=function() {
+		window.location='uploadTarBall?course='+selects.value;
+	}
+}
+</script>
