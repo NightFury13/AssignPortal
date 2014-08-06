@@ -1,4 +1,7 @@
 {{extend 'layout.html'}}
+<div id = 'soln-upload' style="float:right">
+	{{=A(T('Upload Solution'), _href=URL('AssignmentPortal','default','indiUpload'), _class='btn')}}
+</div>
 <div id='search-box'>
 	<h4>Enter details :</h4> 
 	<form method='get' action="{{=URL('AssignmentPortal','default','studentInterface')}}">
@@ -17,11 +20,8 @@
 		{{for submission in userData:}}
 			<div id='sub'>
 				<div id='sub-image' style='float:left'>
-					<img src="{{=URL('download',args=submission['Submission']['image'])}}"/>
-				</div>
-				<div id='sub-comments' style='float:right'>
-					<p>Marks : {{=submission['SubmitReview']['marks']}}</p><br/>
-					<p>Comment : {{=submission['SubmitReview']['comments']}}</p><br/>
+					<img src="{{=URL('download',args=submission['Submission']['image'])}}" width=30%/>
+					<p style="float:right">Marks : {{=submission['SubmitReview']['marks']}} ~ Comment : {{=submission['SubmitReview']['comments']}}</p><br/>
 				</div>
 			</div>
 		{{pass}}

@@ -205,7 +205,18 @@ def checking():
 			except:
 				prob = int(request.vars['problem'][0])
 			
-			submission = db((db.Submission.problem == prob) & (db.Submission.marked == None)).select().first()
+			submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  (db.Submission.marked == None)).select().first()
+			try:
+				p_id = submission['problem']
+				print p_id
+				check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
+				print len(check)
+				if len(check)==0:
+					redirect(URL('default','TAinterface'))
+
+			except:
+				session.flash = 'Access Denied'
+				redirect(URL('default','TAinterface'))
 			db.SubmitReview.id.readable=False
 			db.SubmitReview.id.writable=False
 			db.SubmitReview.student.readable=False
@@ -238,6 +249,9 @@ def checking():
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 	return locals()
+
+def indiUpload():
+	form = SQLFORM.factory
 
 @auth.requires_login()
 def studentInterface():
