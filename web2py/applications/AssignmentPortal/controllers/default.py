@@ -161,6 +161,8 @@ def solutionImageTag():
         db.Submission.id.writable=False
         db.Submission.image.readable=False
         db.Submission.image.writable=False
+        db.Submission.marked.readable=False
+        db.Submission.marked.writable=False
         #db.Submission.student="get suggested student"
         if img:
             form=SQLFORM(db.Submission,img)
