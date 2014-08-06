@@ -21,7 +21,8 @@ def index():
     if not msg:
 	    msg = 'Welcome'
     response.flash = T(msg)
-    return dict(message=T('Hello World'))
+    return dict(login_form=auth.login(),message=T('Hello World'))
+
 
 def autoAssignment():
 	form = SQLFORM(db.AutoAssign)
@@ -183,6 +184,10 @@ def processFile(filename):
 	    ############################################################################################
 
 def solutionImageTag():
+    if auth.user.usertype=='Student':
+        msg = 'Access Denied!'
+        redirect(URL(r=request,f='index?msg=%s' % (msg)))
+
     if request.vars:
         try:
             course = int(request.vars['course'])
@@ -268,6 +273,10 @@ def checking():
 
 @auth.requires_login()
 def studentInterface():
+	if auth.user.usertype!='Student':
+		msg = 'Access Denied!'
+		redirect(URL(r=request,f='index?msg=%s' % (msg)))
+		
 	if request.vars:
 		try:
 			course = int(request.vars['course'])

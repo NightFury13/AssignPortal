@@ -2,21 +2,8 @@
 {{extend 'layout.html'}}
 
 {{if 'message' in globals():}}
-<h3>{{=message}}</h3>
+<h3>International Institute of Information Technology</h3>
 
-<h4>{{=T('How did you get here?')}}</h4>
-<ol>
-  <li>{{=T('You are successfully running web2py')}}</li>
-  <li>{{=XML(T('You visited the url %s', A(request.env.path_info,_href=request.env.path_info)))}}</li>
-  <li>{{=XML(T('Which called the function %s located in the file %s',
-             (A(request.function+'()',_href='#'),
-              A('web2py/applications/%(application)s/controllers/%(controller)s.py'%request,
-               _href=URL('admin','default','peek', args=(request.application,'controllers',request.controller+'.py'))))))}}</li>
-  <li>{{=XML(T('The output of the file is a dictionary that was rendered by the view %s',
-           A('web2py/applications/%(application)s/views/%(controller)s/index.html'%request,
-           _href=URL('admin','default','peek',args=(request.application,'views',request.controller,'index.html')))))}}</li>
-  <li>{{=T('You can modify this application and adapt it to your needs')}}</li>
-</ol>
 {{elif 'content' in globals():}}
 {{=content}}
 {{else:}}
@@ -24,14 +11,36 @@
 {{pass}}
 
 {{block right_sidebar}}
+<div id='login'>
+	{{if not auth.user_id:}}
+		<div id='login-form' style="background-color:lightgrey; width:420px">
+			<center><h3>Login</h3>
+			{{=login_form}}
+			<h5>Not a member yet? {{=A(T("Join Here!"), _href=URL('AssignmentPortal','default','user/register'), _class='link')}}</h5>
+			</center>
+			<br/>
+		</div>
+	{{else:}}
+		{{if auth.user.usertype=='Student':}}
+			{{=A(T("Student Interface"), _href=URL('AssignmentPortal','default','studentInterface'), _class='btn')}}
+		{{pass}}
+		{{if auth.user.usertype=='Faculty':}}
+			{{=A(T("Faculty Interface"), _href=URL('AssignmentPortal','default','facultyInterface'), _class='btn')}}
+		{{pass}}
+		{{if auth.user.usertype=='TA':}}
+			{{=A(T("TA Interface"), _href=URL('AssignmentPortal','default','TAinterface'), _class='btn')}}
+		{{pass}}
+		{{if auth.user.usertype=='Admin':}}
+			{{=A(T("Admin Interface"), _href=URL('AssignmentPortal','default','studentInterface'), _class='btn')}}
+		{{pass}}
+		<br/>
+		<br/>
+	{{pass}}
+</div>
+
+<!--
 {{=A(T("Administrative Interface"), _href=URL('admin','default','index'), _class='btn',
      _style='margin-top: 1em;')}}
-<h6>{{=T("Don't know what to do?")}}</h6>
-<ul>
-  <li>{{=A(T("Online examples"), _href=URL('examples','default','index'))}}</li>
-  <li><a href="http://web2py.com">web2py.com</a></li>
-  <li><a href="http://web2py.com/book">{{=T('Documentation')}}</a></li>
-</ul>
 
 <br/><br/>
 {{=A(T("Auto Assignment Addition"), _href=URL('AssignmentPortal','default','autoAssignment'), _class='btn')}}
@@ -45,7 +54,6 @@
 {{=A(T("Student interface"), _href=URL('AssignmentPortal','default','studentInterface'), _class='btn')}}
 <br/><br/>
 {{=A(T("Faculty interface"), _href=URL('AssignmentPortal','default','facultyInterface'), _class='btn')}}
-<!--<br/><br/>
-{{=A(T("Assignment Upload"), _href=URL('AssignmentPortal','default','uploadAssignment'), _class='btn')}}-->
 <br/>
+-->
 {{end}}

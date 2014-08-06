@@ -43,7 +43,7 @@ response.generic_patterns = ['*'] if request.is_local else []
 from gluon.tools import Auth, Crud, Service, PluginManager, prettydate
 auth = Auth(db)
 
-from gluon.contrib.login_methods.cas_auth import CasAuth
+#from gluon.contrib.login_methods.cas_auth import CasAuth
 
 auth.settings.extra_fields['auth_user'] = [
 		Field('usertype',requires=IS_IN_SET(['Student','TA','Faculty','Admin']),default='Student'),
@@ -54,11 +54,11 @@ crud, service, plugins = Crud(db), Service(), PluginManager()
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=True, signature=False)
 
-auth.settings.login_form=CasAuth(
-            urlbase = "https://login.iiit.ac.in/cas",
-            actions = ['login','validate','logout'],
-            casversion = 2,
-            casusername = "cas:user")
+#auth.settings.login_form=CasAuth(
+#           urlbase = "https://login.iiit.ac.in/cas",
+#           actions = ['login','validate','logout'],
+#           casversion = 2,
+#           casusername = "cas:user")
 
 
 ## configure email
@@ -71,7 +71,7 @@ mail.settings.login = 'username:password'
 auth.settings.registration_requires_verification = False
 auth.settings.registration_requires_approval = False
 auth.settings.reset_password_requires_verification = False
-auth.settings.actions_disabled=['register','change_password','verify_email','retrieve_username','request_reset_password','reset_assword']
+#auth.settings.actions_disabled=['register','change_password','verify_email','retrieve_username','request_reset_password','reset_password']
 auth.settings.login_next = URL('index')
 auth.settings.profile_next = URL('index')
 
