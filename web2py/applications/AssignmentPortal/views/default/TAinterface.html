@@ -7,7 +7,12 @@
 <div id='search-box'>
 	<h4>Check Problems assignmed to you :</h4> 
 		<form method='get' action="{{=URL('AssignmentPortal','default','TAinterface')}}">
-		<input type='text' name='assign' value='assign-id'><br/>
+		<select name='assign' value='assign-id'>
+			{{for i in assignments_of_ta:}}
+			<option value={{=i}}>{{=assignments_of_ta[i][0]}} / {{=assignments_of_ta[i][1]}}</option>
+			{{pass}}
+		</select>
+			<br/>
 		<input type='submit' value='Submit'>
 	</form>
 </div>

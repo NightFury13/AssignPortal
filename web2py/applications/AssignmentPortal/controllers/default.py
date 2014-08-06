@@ -46,7 +46,6 @@ def uploadTarBall():
 			if len(course):
 				all_assigns = {}
 				course = course[0]
-				print course
 				assigns = db(db.Assign.course == course).select()
 				for x in range(len(assigns)):
 					all_assigns[x+1] = assigns[x].name
@@ -217,15 +216,19 @@ def solutionImageTag():
 def TAinterface():
 	if auth.user.usertype == 'TA':
 		problems = ''
+		all_problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == db.Assign.id) &(db.Course.id == db.Assign.course)).select(db.Problem.id,db.Assign.id,db.Problem.question,db.Assign.name,db.Course.name, orderby = db.Assign.name)
 		if request.vars:
 			try:
 				assign = int(request.vars['assign'])
 			except:
 				assign = int(request.vars['assign'][0])
-			problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == assign) & (db.Assign.id == assign)).select(db.Problem.id,db.Problem.question,db.Assign.name, orderby = db.Assign.name)
+			problems = db((db.TaProb.ta == auth.user.id) & (db.Course.id == db.Assign.course)&(db.Problem.id == db.TaProb.prob) & (db.Problem.assign == assign) & (db.Assign.id == assign)).select(db.Problem.id,db.Assign.id,db.Problem.question,db.Assign.name,db.Course.name, orderby = db.Assign.name)
 		else:
-			problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == db.Assign.id)).select(db.Problem.id,db.Problem.question,db.Assign.name, orderby = db.Assign.name)
-	else:
+                        problems=all_problems
+                assignments_of_ta={}
+                for i in range(len(all_problems)):
+                    assignments_of_ta[all_problems[i].Assign.id]=[all_problems[i].Course.name,all_problems[i].Assign.name]
+        else:
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 	return locals()
