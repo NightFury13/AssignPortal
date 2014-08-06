@@ -165,6 +165,11 @@ def solutionImageTag():
         db.Submission.marked.writable=False
         #db.Submission.student="get suggested student"
         if img:
+            pre_problem=db(db.Problem.assign == img['assign']).select(db.Problem.id)
+            probs=[]
+            for i in range(len(pre_problem)):
+                probs.append(pre_problem[i]['Problem.id'])
+            db.Submission.problem.requires=IS_IN_SET(probs)
             form=SQLFORM(db.Submission,img)
             if form.process().accepted:
                 session.flash = 'solution tagged'
