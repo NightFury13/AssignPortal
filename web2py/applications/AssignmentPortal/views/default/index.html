@@ -22,7 +22,7 @@
 		</div>
 	{{else:}}
 		{{if auth.user.usertype=='Student':}}
-		{{redirect(URL('default','studentInterface')}}	
+		{{redirect(URL('default','studentInterface'))}}	
 		{{pass}}
 		{{if auth.user.usertype=='Faculty':}}
 		{{redirect(URL('default','facultyInterface'))}}	
@@ -37,23 +37,4 @@
 		<br/>
 	{{pass}}
 </div>
-
-<!--
-{{=A(T("Administrative Interface"), _href=URL('admin','default','index'), _class='btn',
-     _style='margin-top: 1em;')}}
-
-<br/><br/>
-{{=A(T("Auto Assignment Addition"), _href=URL('AssignmentPortal','default','autoAssignment'), _class='btn')}}
-<br/><br/>
-{{=A(T("Upload Solution Tarball"), _href=URL('AssignmentPortal','default','uploadTarBall'), _class='btn')}}
-<br/><br/>
-{{=A(T("Image Viewer"), _href=URL('AssignmentPortal','default','solutionImageTag'), _class='btn')}}
-<br/><br/>
-{{=A(T("TA interface"), _href=URL('AssignmentPortal','default','TAinterface'), _class='btn')}}
-<br/><br/>
-{{=A(T("Student interface"), _href=URL('AssignmentPortal','default','studentInterface'), _class='btn')}}
-<br/><br/>
-{{=A(T("Faculty interface"), _href=URL('AssignmentPortal','default','facultyInterface'), _class='btn')}}
-<br/>
--->
 {{end}}
