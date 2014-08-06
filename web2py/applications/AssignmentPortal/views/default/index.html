@@ -22,16 +22,16 @@
 		</div>
 	{{else:}}
 		{{if auth.user.usertype=='Student':}}
-			{{=A(T("Student Interface"), _href=URL('AssignmentPortal','default','studentInterface'), _class='btn')}}
+		{{redirect(URL('default','studentInterface')}}	
 		{{pass}}
 		{{if auth.user.usertype=='Faculty':}}
-			{{=A(T("Faculty Interface"), _href=URL('AssignmentPortal','default','facultyInterface'), _class='btn')}}
+		{{redirect(URL('default','facultyInterface'))}}	
 		{{pass}}
 		{{if auth.user.usertype=='TA':}}
-			{{=A(T("TA Interface"), _href=URL('AssignmentPortal','default','TAinterface'), _class='btn')}}
+		{{redirect(URL('default','TAinterface'))}}	
 		{{pass}}
 		{{if auth.user.usertype=='Admin':}}
-			{{=A(T("Admin Interface"), _href=URL('AssignmentPortal','default','studentInterface'), _class='btn')}}
+		{{redirect(URL('default','facultyInterface'))}}	
 		{{pass}}
 		<br/>
 		<br/>
