@@ -2,8 +2,11 @@
 <div id='search-box'>
 	<h4>Enter details :</h4> 
 	<form method='get' action="{{=URL('AssignmentPortal','default','studentInterface')}}">
-		<input type='text' name='course' value='course-id'><br/>
-		<input type='text' name='assign' value='assign-id'><br/>
+		Assignment:  <select id='assign' name='assign' value='assign-id'>
+			{{for i in assignments:}}
+			<option value={{=i['Assign']['id']}}>{{=i['Course']['name']}} / {{=i['Assign']['name']}}</option>
+			{{pass}}
+		</select><br/>
 		<input type='submit' value='Submit'>
 	</form>
 </div>

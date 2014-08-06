@@ -113,40 +113,6 @@ def extractTarBall(filename,course,assign,course_id,assign_id):
 	except:
 		response.flash = 'image extraction from folder '+course+'-'+assign+' failed!'
 
-######################################################################################################################
-# Jaggi's code #
-################
-#def uploadAssignment():
-#    form=SQLFORM(db.UploadedAssign)
-#    form.vars.student=auth.user.id
-#    if form.process().accepted:
-#        filename=form.vars.filename
-#        msg=processTar(filename)
-#        redirect(URL(r=request,f='index?msg='+msg))
-#    elif form.errors:
-#        response.flash='Form Error!'
-#    return dict(form=form)
-
-#def processTar(filename):
-#    tar=tarfile.open(os.path.join(request.folder,'temps/assignment/tar/'+filename))
-#    expath=os.path.join(request.folder,'temps/assignment/tar/parse/'+filename.split('.')[2])
-#    os.makedirs(expath)
-#    tar.extractall(path=expath)
-#    tree=ET.parse(os.path.join(expath,'meta.xml'))
-#    root=tree.getroot()
-#    course_code=root.attrib['ccode']
-#    course_id=db(db.Course.code==course_code).select(db.Course.id)[0]
-#    assign_num=root.attrib['num']
-#    assign_id=db((db.Assign.num==assign_num) & (db.Assign.course==course_id)).select(db.Assign.id)[0]
-#    for problem in root.findall('problem'):
-#        prob_id=problem.attrib['id']
-#        img_path=os.path.join(expath,problem.find('img').text)
-#        answer_text=problem.find('text').text
-#        db.Submission.insert(student=auth.user.id,assign=assign_id,problem=prob_id,image=img_path,answer=answer_text)
-#    return 'Upload Successful'
-
-###########################################################################################################################		 
-
 def processFile(filename):
 	msg = ''
 	try:
@@ -178,9 +144,6 @@ def processFile(filename):
 		msg = 'xml-file parse failed'
 	return msg
 
-	    ############################################################################################
-#To-Do: # Make a form in solutionImageTag.html which sends courseid and assignid to this controller#
-	    ############################################################################################
 
 def solutionImageTag():
     if auth.user.usertype=='Student':
@@ -284,17 +247,16 @@ def studentInterface():
 		
 	if request.vars:
 		try:
-			course = int(request.vars['course'])
 			assign = int(request.vars['assign'])
 		except:
-			course = int(request.vars['course'][0])
 			assign = int(request.vars['assign'][0])
 		
+                course = db((db.Assign.id == assign) &(db.Assign.course == db.Course.id)).select(db.Course.id).first()
 		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)	
 	else:	
 		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)
-	
-	return locals()
+	assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
+        return locals()
 
 @auth.requires_login()
 def facultyInterface():
