@@ -9,7 +9,12 @@
 <div id='search-box'>
 	<h4>Enter details for assignments:</h4> 
 	<form method='get' action="{{=URL('AssignmentPortal','default','facultyInterface')}}">
-		<input type='text' name='course' value='course-id'><br/>
+		<select name='course' value='course-id'><br/>
+			{{for i in faccourses:}}
+			<option value={{=faccourses[i][0]}}>{{=faccourses[i][1]}}</option>
+			{{pass}}
+		</select>
+		<br/>
 		<input type='submit' value='Submit'>
 	</form>
 </div>
@@ -28,7 +33,12 @@
 <br/>
 <br/>
 <div id='search-result'>
-	{{if facData:}}
+	{{try:}}
+	{{facData}}
+	{{except:}}
+	{{facData=allfacData}}
+	{{pass}}
+	{{if facData and assign==None:}}
 		<div id='course-details'>
 		{{prev = ''}}
 		<ul>
@@ -42,7 +52,7 @@
 		{{pass}}
 		</ul>
 		</div>
-	{{else:}}
+	{{elif assign==None:}}
 		<h4> No assignments for this course </h4>
 	{{pass}}
 </div>		
