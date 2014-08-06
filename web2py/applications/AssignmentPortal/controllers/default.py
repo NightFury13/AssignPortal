@@ -169,7 +169,7 @@ def solutionImageTag():
             probs=[]
             for i in range(len(pre_problem)):
                 probs.append(pre_problem[i]['Problem.id'])
-            db.Submission.problem.requires=IS_IN_SET(probs)
+            db.Submission.problem.requires=IS_IN_DB(db(db.Problem.assign == img['assign']),'Problem.id','Problem.num')
             form=SQLFORM(db.Submission,img)
             if form.process().accepted:
                 session.flash = 'solution tagged'
