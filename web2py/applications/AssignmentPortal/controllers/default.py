@@ -222,7 +222,9 @@ def TAinterface():
 				assign = int(request.vars['assign'])
 			except:
 				assign = int(request.vars['assign'][0])
-			problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == assign)).select(db.Problem.id,db.Problem.question)
+			problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == assign) & (db.Assign.id == assign)).select(db.Problem.id,db.Problem.question,db.Assign.name, orderby = db.Assign.name)
+		else:
+			problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == db.Assign.id)).select(db.Problem.id,db.Problem.question,db.Assign.name, orderby = db.Assign.name)
 	else:
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))

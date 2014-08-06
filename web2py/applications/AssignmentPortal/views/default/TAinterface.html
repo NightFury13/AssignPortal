@@ -14,10 +14,19 @@
 
 {{if problems:}}
 	<h3>Problems Assigned :</h3>
+	{{temp = ''}}
+	<ul>
 	{{for problem in problems:}}
-		<a href="{{=URL('AssignmentPortal','default','checking')}}?problem={{=problem['id']}}">{{=problem['question']}}</a>
+		{{if problem['Assign']['name'] != temp:}}
+			</ul>
+			{{temp = problem['Assign']['name']}}
+			<ul>
+			<h3>{{=temp}}</h3>
+		{{pass}}
+		<li><a href="{{=URL('AssignmentPortal','default','checking')}}?problem={{=problem['Problem']['id']}}">{{=problem['Problem']['question']}}</a></li>
 		<br/><br/>
 	{{pass}}
+	</ul>
 {{else:}}
 	<h5> No problems assigned to you in this assignment! </h5>
 {{pass}}

@@ -120,7 +120,7 @@ db.define_table('Assign',
 			
 db.define_table('Problem',
 		db.Field('assign',db.Assign,requires=IS_IN_DB(db,'Assign.id','Assign.name')),
-		db.Field('num','integer',required=True,unique=True),
+		db.Field('num','integer',required=True),
 		db.Field('question','string',required=True),
 		db.Field('image','upload'),
 		db.Field('start_time','datetime',default=request.now),
