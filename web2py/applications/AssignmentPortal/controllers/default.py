@@ -152,12 +152,11 @@ def solutionImageTag():
 
     courses = db((db.Course.id>0)& (db.Assign.course==db.Course.id)).select(db.Course.id,db.Course.name,db.Assign.id,db.Assign.name)
     if request.vars:
-        print request.vars
         try:
             assign = int(request.vars['assign'])
         except:
             assign = int(request.vars['assign'][0])
-        img = db((db.Assign.course==db.Course.id) & (db.Assign.id == db.Submission.assign) & (db.Submission.assign == assign) & (db.Submission.student==None)).select().first()
+        img = db((db.Assign.course==db.Course.id) & (db.Assign.id == assign) & (db.Submission.assign == assign) & (db.Submission.student==None)).select(db.Submission.ALL).first()
         db.Submission.id.readable=False
         db.Submission.id.writable=False
         db.Submission.image.readable=False
@@ -208,9 +207,7 @@ def checking():
 			submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  ((db.Submission.marked == None) or (db.Submission.marked==False))).select().first()
                         try:
 				p_id = submission['problem']
-				print p_id
 				check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
-				print len(check)
 				if len(check)==0:
 					redirect(URL('default','TAinterface'))
 
