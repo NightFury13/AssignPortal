@@ -150,14 +150,14 @@ def solutionImageTag():
         msg = 'Access Denied!'
         redirect(URL(r=request,f='index?msg=%s' % (msg)))
 
+    courses = db((db.Course.id>0)& (db.Assign.course==db.Course.id)).select(db.Course.id,db.Course.name,db.Assign.id,db.Assign.name)
     if request.vars:
+        print request.vars
         try:
-            course = int(request.vars['course'])
             assign = int(request.vars['assign'])
         except:
-            course = int(request.vars['course'][0])
             assign = int(request.vars['assign'][0])
-        img = db((db.Submission.course == course) & (db.Submission.assign == assign) & (db.Submission.student==None)).select().first()
+        img = db((db.Assign.course==db.Course.id) & (db.Assign.id == db.Submission.assign) & (db.Submission.assign == assign) & (db.Submission.student==None)).select().first()
         db.Submission.id.readable=False
         db.Submission.id.writable=False
         db.Submission.image.readable=False
@@ -167,7 +167,7 @@ def solutionImageTag():
             form=SQLFORM(db.Submission,img)
             if form.process().accepted:
                 session.flash = 'solution tagged'
-                redirect(URL(r=request,f='solutionImageTag?course=%s&assign=%s' % (course,assign)))
+                redirect(URL(r=request,f='solutionImageTag?assign=%s' % (assign)))
             elif form.errors:
                 response.flash = 'error tagging the image'
         else:
@@ -205,8 +205,8 @@ def checking():
 			except:
 				prob = int(request.vars['problem'][0])
 			
-			submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  (db.Submission.marked == None)).select().first()
-			try:
+			submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  ((db.Submission.marked == None) or (db.Submission.marked==False))).select().first()
+                        try:
 				p_id = submission['problem']
 				print p_id
 				check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
@@ -215,6 +215,10 @@ def checking():
 					redirect(URL('default','TAinterface'))
 
 			except:
+                                if(submission==None):
+                                    session.flash = 'All Answer Sheets Checked'
+                                    redirect(URL('default','TAinterface'))
+
 				session.flash = 'Access Denied'
 				redirect(URL('default','TAinterface'))
 			db.SubmitReview.id.readable=False
