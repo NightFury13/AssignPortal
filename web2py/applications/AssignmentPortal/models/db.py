@@ -46,7 +46,7 @@ auth = Auth(db)
 #from gluon.contrib.login_methods.cas_auth import CasAuth
 
 auth.settings.extra_fields['auth_user'] = [
-		Field('usertype',requires=IS_IN_SET(['Student','TA','Faculty','Admin']),default='Student'),
+		Field('usertype',requires=IS_IN_SET(['Student','TA','Faculty','Admin']),default='Student',readable=False,writable=False),
 		Field('rollno','integer')]
 
 crud, service, plugins = Crud(db), Service(), PluginManager()
@@ -130,6 +130,11 @@ db.define_table('Problem',
 db.define_table('TaProb',
 		db.Field('ta',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
 		db.Field('prob',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.num'))
+		)
+
+db.define_table('TaCourse',
+		db.Field('ta',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
+		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name'))
 		)
 
 db.define_table('StudCourse',
