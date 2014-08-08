@@ -258,8 +258,12 @@ def checking():
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 	return locals()
 
-def indiUpload():
-	form = SQLFORM.factory
+def adminInterface():
+	if auth.user.usertype == 'Admin':
+		session.flash = 'Welcome Admin'
+	else:
+		session.flash = 'Access Denied'
+	return locals()
 
 @auth.requires_login()
 def studentInterface():
@@ -293,6 +297,28 @@ def facultyInterface():
 				assign = int(request.vars['assign'][0])
 				assignName = db(db.Assign.id == assign).select(db.Assign.name)[0]['name']
 				assignData = db(db.Problem.assign == assign).select()
+			
+			submissionStat = db(db.Submission.assign == assign).select(db.Submission.ALL)
+			course = submissionStat[0]['course']
+			sub_tot = 0
+			sub_marked = 0
+			users = []
+			users.append('None') #As when we dont have images tagged. Student name is None, we dont have to count that.
+			for sub in submissionStat:
+				if sub['student'] not in users:
+					sub_tot += 1
+					users.append(sub['student'])
+					if sub['marked'] == True:
+						sub_marked += 1
+			totalStudents = db(db.StudCourse.course == course).select(db.StudCourse.ALL)
+			users = []
+			stud_tot = 0
+			users.append('None')
+			for student in totalStudents:
+				if student['student'] not in users:
+					users.append(student['student'])
+					stud_tot += 1
+			
 		if request.vars['course']:
 			try:
 				course = int(request.vars['course'])
@@ -300,13 +326,13 @@ def facultyInterface():
 				course = int(request.vars['course'][0])
 
 			facData = db((db.FacCourse.faculty == auth.user.id) & (db.FacCourse.course == course) & (db.Assign.course == course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code,db.Course.id, orderby = db.Course.id)
-		#else:
-                allfacData = db((db.FacCourse.faculty == auth.user.id) & (db.Assign.course == db.FacCourse.course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code,db.Course.id, orderby = db.Course.id)
-                faccourses ={}
-                for i in range(len(allfacData)):
-                    faccourses[i+1]=[allfacData[i].Assign.course,allfacData[i].Course.name]
-
-        else:
+		
+		allfacData = db((db.FacCourse.faculty == auth.user.id) & (db.Assign.course == db.FacCourse.course) & (db.Course.id == db.Assign.course)).select(db.Assign.ALL,db.Course.name,db.Course.code,db.Course.id, orderby = db.Course.id)
+		faccourses ={}
+		for i in range(len(allfacData)):
+			faccourses[i+1]=[allfacData[i].Assign.course,allfacData[i].Course.name]
+			
+	else:
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 	return locals()
