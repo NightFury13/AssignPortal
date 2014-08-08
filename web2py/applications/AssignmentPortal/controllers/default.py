@@ -146,7 +146,7 @@ def processFile(filename):
 
 
 def solutionImageTag():
-    if auth.user.usertype=='Student':
+    if auth.user.usertype=='Student' or auth.user.usertype=='TA':
         msg = 'Access Denied!'
         redirect(URL(r=request,f='index?msg=%s' % (msg)))
 
@@ -267,7 +267,7 @@ def adminInterface():
 
 @auth.requires_login()
 def studentInterface():
-	if auth.user.usertype!='Student':
+	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 		
