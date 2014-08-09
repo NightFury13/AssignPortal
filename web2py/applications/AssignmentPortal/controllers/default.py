@@ -8,7 +8,10 @@ import os
 import tarfile
 import xml.etree.ElementTree as ET
 import threading
+import datetime
+import time
 from multiprocessing import Process
+
 def index():
     """
     example action using the internationalization operator T and flash
@@ -207,7 +210,7 @@ def studupload():
 	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
-		
+
 	if request.vars:
 		if request.vars:
 			if request.vars.assign:
@@ -215,7 +218,7 @@ def studupload():
 			else:
 				prob_no=request.vars.problem
 				assign_no=db(db.Problem.id==prob_no).select(db.Problem.assign).first()['assign']
-			problems=db((db.Problem.assign==assign_no)).select(db.Problem.id,db.Problem.num)
+			problems=db((db.Problem.assign==assign_no)).select(db.Problem.id,db.Problem.num,db.Problem.end_time)
 			studprobs = {}
 			for i in range(len(problems)):
 				 studprobs[problems[i].id]=problems[i].num
@@ -235,11 +238,14 @@ def studupload():
 			form.vars.assign = assign_course['id']
 			form.vars.course = assign_course['course']
 			
-				
 			if form.process().accepted:
-				#add time
-				for i in form.vars:
-					print i
+				problem_end_time= problems[0].end_time
+				current_time = datetime.datetime.now()
+				diff_time= (time.mktime(problem_end_time.timetuple()) - time.mktime(current_time.timetuple()))
+				if diff_time<0:
+					session.flash =T("Assignment Deadline Passed")
+					redirect(URL('default','studentInterface'))
+
 				already_submitted= db((db.Submission.problem == form.vars.problem)&(db.Submission.student == form.vars.student)).select()
 				if len(already_submitted)==0:			
 					db.Submission.insert(student=form.vars.student,course=form.vars.course,\
