@@ -258,9 +258,35 @@ def checking():
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 	return locals()
 
+@auth.requires_login()	
 def adminInterface():
 	if auth.user.usertype == 'Admin':
-		session.flash = 'Welcome Admin'
+		if request.vars:
+			try:
+				course = int(request.vars['course'])
+				ta_list = request.vars['tas']
+				tas = ta_list.split(',')
+				try:
+					for ta in tas:
+						ta_id = db(db.auth_user.rollno == int(ta)).select(db.auth_user.id)[0]
+						db.TaCourse.insert(ta=ta_id['id'],course=course)
+						db(db.auth_user.id == ta_id['id']).update(usertype='TA')
+					response.flash = 'TA allocation successful'
+				except:
+				 	response.flash = 'TA allocation failed!'
+			except:
+				course = int(request.vars['course'])
+				fac = request.vars['faculty']
+				try:
+					fac_id = db(db.auth_user.username == fac).select(db.auth_user.id,db.auth_user.first_name)[0]
+					cor = db(db.Course.id == course).select(db.Course.name)[0]
+					db.FacCourse.insert(faculty = fac_id['id'], course = course)
+					db(db.auth_user.id == fac_id['id']).update(usertype='Faculty')
+					response.flash = fac_id['first_name']+' is now faculty for '+cor['name']
+				except:
+				 	response.flash = 'Faculty assigment failed!'
+		courses = db(db.Course.id>0).select(db.Course.id,db.Course.name)
+
 	else:
 		session.flash = 'Access Denied'
 	return locals()
