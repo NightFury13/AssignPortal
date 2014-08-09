@@ -1,7 +1,7 @@
 {{extend 'layout.html'}}
-<div id = 'soln-upload' style="float:right">
-	{{=A(T('Upload Solution'), _href=URL('AssignmentPortal','default','indiUpload'), _class='btn')}}
-</div>
+<div id = 'soln-upload'>
+	{{=A(T('Upload Solution'), _href=URL('AssignmentPortal','default','studupload'), _class='btn')}}
+</div><br/>
 <div id='search-box'>
 	<h4>Enter details :</h4> 
 	<form method='get' action="{{=URL('AssignmentPortal','default','studentInterface')}}">

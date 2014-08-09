@@ -203,6 +203,62 @@ def TAinterface():
 	return locals()
 
 @auth.requires_login()
+def studupload():
+	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
+		msg = 'Access Denied!'
+		redirect(URL(r=request,f='index?msg=%s' % (msg)))
+		
+	if request.vars:
+		if request.vars:
+			if request.vars.assign:
+				assign_no=request.vars.assign
+			else:
+				prob_no=request.vars.problem
+				assign_no=db(db.Problem.id==prob_no).select(db.Problem.assign).first()['assign']
+			problems=db((db.Problem.assign==assign_no)).select(db.Problem.id,db.Problem.num)
+			studprobs = {}
+			for i in range(len(problems)):
+				 studprobs[problems[i].id]=problems[i].num
+			db.Submission.student.readable=False
+			db.Submission.student.writable=False
+			db.Submission.assign.readable=False
+			db.Submission.assign.writable=False
+			db.Submission.course.readable=False
+			db.Submission.course.writable=False
+			db.Submission.marked.readable=False
+			db.Submission.marked.writable=False
+			db.Submission.problem.requires=IS_IN_SET(studprobs)
+			db.Submission.image.uploadfolder=os.path.join(request.folder,'uploads')
+			form = SQLFORM.factory(db.Submission)
+			form.vars.student=auth.user.id
+			assign_course = db((db.Assign.id==assign_no)).select(db.Assign.id,db.Assign.course).first()
+			form.vars.assign = assign_course['id']
+			form.vars.course = assign_course['course']
+			
+				
+			if form.process().accepted:
+				#add time
+				for i in form.vars:
+					print i
+				already_submitted= db((db.Submission.problem == form.vars.problem)&(db.Submission.student == form.vars.student)).select()
+				if len(already_submitted)==0:			
+					db.Submission.insert(student=form.vars.student,course=form.vars.course,\
+						assign=form.vars.assign,problem=form.vars.problem,image=form.vars.image,\
+						answer=form.vars.answer,marked=form.vars.marked)
+				else:
+					db((db.Submission.student==form.vars.student)&(db.Submission.course==form.vars.course)
+						&(db.Submission.assign==form.vars.assign)&(db.Submission.problem==form.vars.problem))\
+					.update(image=form.vars.image,answer=form.vars.answer,marked=form.vars.marked)
+				session.flash =T("Assignment Uploaded Succesfully")
+				redirect(URL('default','studentInterface'))
+			elif form.errors:
+				response.flash = 'form has errors'
+	
+	assignments = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Assign.course) &(db.Course.id==db.StudCourse.course)).select(db.Assign.id,db.Assign.name,db.Course.name)
+	
+	return locals()
+
+@auth.requires_login()
 def checking():
 	if auth.user.usertype == 'TA':
 		if request.vars:

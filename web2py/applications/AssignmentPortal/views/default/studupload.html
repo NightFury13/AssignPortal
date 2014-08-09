@@ -1,0 +1,13 @@
+{{extend 'layout.html'}}
+{{try:}}
+{{=form}}
+{{except:}}
+<form name="uploadassignment" action="{{=URL('default','studupload')}}" method="post">
+Choose Assignment:  <select id='assign' name='assign' value='assign-id'>
+			{{for i in assignments:}}
+			<option value={{=i['Assign']['id']}}>{{=i['Course']['name']}} / {{=i['Assign']['name']}}</option>
+			{{pass}}
+		</select><br/>
+		<input type='submit' value='Submit'>
+</form>
+{{pass}}
