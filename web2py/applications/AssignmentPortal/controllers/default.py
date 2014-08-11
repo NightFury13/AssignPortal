@@ -105,13 +105,12 @@ def extractTarBall(filename,course,assign,course_id,assign_id):
 		try:
 			os.system('rm -rf '+expath.replace(' ','\ ')) # Removes the temporarily stored images and upload file. (verified (Y))
 			os.system('rm '+ os.path.join(request.folder,'temps/solution/'+filename.replace(' ','\ ')))
-			################################################################################################################################
-	#To-Do: # We also need to delete the images from the ImageStack DB, these images lie as a waste. Was initially used to extract the .tar#
-			# This should probably be done when inserting images to the Submission DB. (as there may be more than one user's iamges being  #
-			# loaded at a given time)																									   #
-			################################################################################################################################
 		except:
 			pass
+			#################################################
+	#Todo: 	# Put the actual admins email-id over here		#
+			#################################################
+		os.system('echo "Solution Images Uploaded" | mail -s test develop13mohit@gmail.com')
 		response.flash = 'images successfully extracted'
 	except:
 		response.flash = 'image extraction from folder '+course+'-'+assign+' failed!'
@@ -123,7 +122,7 @@ def processFile(filename):
 		root = tree.getroot()
 		assign_name = root.attrib['name']
 		course_code = root.attrib['ccode']
-		course_id = db(db.Course.code == course_code).select(db.Course.id,db.Course.id)[0]
+		course_id = db(db.Course.code == course_code).select(db.Course.id)[0]
 		assign_num = root.attrib['num']
 		assign_start_time = root.attrib['start']
 		assign_end_time = root.attrib['end']
@@ -138,10 +137,14 @@ def processFile(filename):
 			prob_id = db.Problem.insert(assign=assign_id,num=prob_num,question=prob_statement,image=prob_image,start_time=prob_st_time,end_time=prob_end_time)
 			
 			ta_list = (child.find('ta').text).split(',')
-		
+	
 			for ta_roll in ta_list:
-				ta_id = db(str(db.auth_user.roll_no) == ta_roll).select(db.auth_user.id,db.auth_user.id)[0]
-				db.TaProb.insert(ta=ta_id,prob=prob_id)
+				ta_id = db(db.auth_user.rollno == int(ta_roll)).select(db.auth_user.id,db.auth_user.email)[0]
+				db.TaProb.insert(ta=ta_id['id'],prob=prob_id)
+				os.system('echo "You have been alloted a new question to check. Check ___server address___" | mail -s NewQuestionAlloted'+ta_id['email'])
+		mail_data = db((db.StudCourse.course == course_id) & (db.StudCourse.student == db.auth_user.id)).select(db.auth_user.email)
+		for user in mail_data:
+			os.system('echo "A new assignment has been uplaoded, check portal now!" | mail -s NewAssignment '+user['email'])
 		msg = 'Assignment Uploaded'
 	except:
 		msg = 'xml-file parse failed'
@@ -306,6 +309,8 @@ def checking():
                            if form.process().accepted:
                                session.flash = 'Marks entered succesfully'
                                db(db.Submission.id == submission['id']).update(marked = True)
+                               user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.student.email)[0]
+                               os.system('echo "Your submission has been marked, check portal now!" | mail -s SolutionChecked '+ user['email'])
                                redirect(URL(r=request,f='checking?problem=%d' %(prob)))
                            else:
                                session.flash = 'Error entering the marks'
