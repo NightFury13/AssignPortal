@@ -51,8 +51,9 @@ def uploadTarBall():
 				course = course[0]
 				assigns = db(db.Assign.course == course).select()
 				for x in range(len(assigns)):
-					all_assigns[x+1] = assigns[x].name
+					all_assigns[assigns[x].id] = assigns[x].name
 					db.ImageStack.assign.requires = IS_IN_SET(all_assigns)
+					print "all",all_assigns
 		except:
 			pass
 	form = SQLFORM(db.ImageStack)
@@ -65,6 +66,7 @@ def uploadTarBall():
 #To-Do: # This here should only show assignments under the specific course selected. Lookup - Cascaded dropdowns#
 	    #########################################################################################################
 		assign_id = form.vars.assign
+		print "ass",assign_id
 		assign = db(db.Assign.id == assign_id).select(db.Assign.name).first()
 		assign = assign.name
 		msg = 'file uploaded successfully, extracting images now. It might take some time...'
@@ -123,7 +125,7 @@ def processFile(filename):
 		assign_name = root.attrib['name']
 		course_code = root.attrib['ccode']
 		course_id = db(db.Course.code == course_code).select(db.Course.id)[0]
-		assign_num = root.attrib['num']
+#		assign_num = root.attrib['num']
 		assign_start_time = root.attrib['start']
 		assign_end_time = root.attrib['end']
 		assign_id = db.Assign.insert(course=course_id,num=assign_num,start_time=assign_start_time,end_time=assign_end_time,name=assign_name)
@@ -183,8 +185,8 @@ def solutionImageTag():
             elif form.errors:
                 response.flash = 'error tagging the image'
         else:
-            msg = 'All images tagged'
-            redirect(URL(r=request,f='index?msg=%s' % (msg)))
+            session.flash = 'All images tagged'
+            redirect(URL(r=request,f='index'))
     return locals()
 
 @auth.requires_login()
@@ -309,7 +311,7 @@ def checking():
                            if form.process().accepted:
                                session.flash = 'Marks entered succesfully'
                                db(db.Submission.id == submission['id']).update(marked = True)
-                               user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.student.email)[0]
+                               user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.auth_user.email)[0]
                                os.system('echo "Your submission has been marked, check portal now!" | mail -s SolutionChecked '+ user['email'])
                                redirect(URL(r=request,f='checking?problem=%d' %(prob)))
                            else:
