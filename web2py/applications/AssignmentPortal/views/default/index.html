@@ -13,7 +13,7 @@
 {{block right_sidebar}}
 <div id='login'>
 	{{if not auth.user_id:}}
-		<div id='login-form' style="background-color:lightgrey; width:420px">
+		<div id='login-form'>
 			<center><h3>Login</h3>
 			{{=login_form}}
 			<h5>Not a member yet? {{=A(T("Join Here!"), _href=URL('AssignmentPortal','default','user/register'), _class='link')}}</h5>
@@ -31,7 +31,7 @@
 		{{redirect(URL('default','TAinterface'))}}	
 		{{pass}}
 		{{if auth.user.usertype=='Admin':}}
-		{{redirect(URL('default','facultyInterface'))}}	
+		{{redirect(URL('default','adminInterface'))}}	
 		{{pass}}
 		<br/>
 		<br/>

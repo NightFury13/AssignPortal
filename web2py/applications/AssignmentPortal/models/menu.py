@@ -5,8 +5,8 @@
 ## Customize your APP title, subtitle and menus here
 #########################################################################
 
-response.logo = A(B('web',SPAN(2),'py'),XML('&trade;&nbsp;'),
-                  _class="brand",_href="http://www.web2py.com/")
+response.logo = A(B('Shiksha'),XML('&trade;&nbsp;'),
+                  _class="brand",_href=URL('default','index'))
 response.title = request.application.replace('_',' ').title()
 response.subtitle = ''
 

@@ -65,7 +65,7 @@
   {{block head}}{{end}}
 </head>
 
-<body>
+<body background="{{=URL('static','images/back.jpg')}}">
   <!-- Navbar ================================================== -->
   <div class="navbar navbar-inverse">
     <div class="flash">{{=response.flash or ''}}</div>
@@ -102,7 +102,7 @@
             </div>
         </div>
 	{{pass}}
-    </header>
+	</header>
 
     <section id="main" class="main row">
         {{if left_sidebar_enabled:}}
@@ -135,7 +135,7 @@
         <footer class="footer span12" id="footer">
             <div class="footer-content">
                 {{block footer}} <!-- this is default footer -->
-                <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
+                <div class="copyright pull-left">{{=T('Copyright')}} &#169; CVIT - IIIT H</div>
                 <div id="poweredBy" class="pull-right">
                     {{=T('Powered by')}}
                     <a href="http://www.web2py.com/">web2py</a>
