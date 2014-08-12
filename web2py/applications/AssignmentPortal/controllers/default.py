@@ -359,6 +359,17 @@ def adminInterface():
 	return locals()
 
 @auth.requires_login()
+def addCourse():
+	if auth.user.usertype == 'Admin':
+		form = SQLFORM(db.Course)
+		if form.process().accepted:
+			session.flash = 'Course added successfully'
+			redirect(URL('default','adminInterface'))
+		else:
+			session.flash = 'Course addition failed'
+	return locals()
+
+@auth.requires_login()
 def studentInterface():
 	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
 		msg = 'Access Denied!'
