@@ -403,7 +403,10 @@ def facultyInterface():
 				assignData = db(db.Problem.assign == assign).select()
 			
 			submissionStat = db(db.Submission.assign == assign).select(db.Submission.ALL)
-			course = submissionStat[0]['course']
+			try:
+				course = submissionStat[0]['course']
+			except:
+				course = db(db.Assign.id == assign).select(db.Assign.course)[0]['course']
 			sub_tot = 0
 			sub_marked = 0
 			users = []
