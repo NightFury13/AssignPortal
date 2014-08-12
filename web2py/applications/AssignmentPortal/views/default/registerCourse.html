@@ -1,0 +1,17 @@
+{{extend 'layout.html'}}
+
+{{=form}}
+<h4>Courses Registered for :</h4>
+<table>
+<tr>
+	<th>Course</th>
+	<th>Code</th>
+</tr>
+{{for i in cur_course:}}
+<tr>
+	<td>{{=i['name']}}</td>
+	<td>{{=i['code']}}</td>
+</tr>
+{{pass}}
+</table>
+

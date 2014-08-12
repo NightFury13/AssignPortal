@@ -372,6 +372,19 @@ def addCourse():
 	return locals()
 
 @auth.requires_login()
+def registerCourse():
+	db.StudCourse.student.default = auth.user.id
+	db.StudCourse.student.readable = False
+	db.StudCourse.student.writable = False
+	form = SQLFORM(db.StudCourse)
+	if form.process().accepted:
+		response.flash = 'Course Registered Successfully'
+	else:
+		response.flash = 'Course Registration Failed'
+	cur_course=db((db.StudCourse.student==auth.user.id) & (db.Course.id == db.StudCourse.course)).select(db.Course.name,db.Course.code)
+	return locals()
+
+@auth.requires_login()
 def studentInterface():
 	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
 		msg = 'Access Denied!'
