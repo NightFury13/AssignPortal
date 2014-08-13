@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<assignment name="AI -assignment 1" num="1" start="2014-06-24 17:50:44" end="2015-06-25 17:50:44" ccode="ICS201">
+<assignment name="Graphics -assignment 1" num="1" start="2014-06-24 17:50:44" end="2015-06-25 17:50:44" ccode="ICS202">
 
 	<!--Now add on the below for new questions-->
 	<question num="1" start="2014-06-24 17:50:44" end="2015-06-24 17:50:44" difficulty="1">
-		<ta>mohit.jain@students.iiit.ac.in,stud1@students.iiit.ac.in</ta>					
+		<ta>arnavkumar.agrawal@students.iiit.ac.in</ta>					
 		<image>None</image>
 		<statement>What is the time complexity of Binary Search Algorithm?</statement>
 	</question>

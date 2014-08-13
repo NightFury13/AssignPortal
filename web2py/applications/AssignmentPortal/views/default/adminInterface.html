@@ -25,13 +25,13 @@
 <br/>
 <div id='ta-course allocation'>
 	<form method='get' action="{{=URL('AssignmentPortal','default','adminInterface')}}">
-		Faculty-Course Allocation: <br/>
+		TA-Course Allocation: <br/>
 			<select id='course' name='course' value='course-id'>
 			{{for i in courses:}}
 			<option value={{=i['id']}}>{{=i['name']}}</option>
 			{{pass}}
 		</select><br/>
-		<input type='text' name='tas' value='Enter TA rollno seperated by commas'><br/>
+		<input type='text' name='tas' value='Enter TA email-ids seperated by commas'><br/>
 		<input type='submit' value='Submit'>
 	</form>
 </div>

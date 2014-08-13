@@ -140,8 +140,13 @@ def processFile(filename):
 			
 			ta_list = (child.find('ta').text).split(',')
 	
-			for ta_roll in ta_list:
-				ta_id = db(db.auth_user.rollno == int(ta_roll)).select(db.auth_user.id,db.auth_user.email)[0]
+			for ta_mail in ta_list:
+				ta_id = db(db.auth_user.email == int(ta_mail)).select(db.auth_user.id,db.auth_user.email)[0]
+
+			########################################################################################
+			## We need to take care of something like making the user a TA if he aint already one ##
+			########################################################################################
+
 				db.TaProb.insert(ta=ta_id['id'],prob=prob_id)
 				os.system('echo "You have been alloted a new question to check. Check ___server address___" | mail -s NewQuestionAlloted'+ta_id['email'])
 		mail_data = db((db.StudCourse.course == course_id) & (db.StudCourse.student == db.auth_user.id)).select(db.auth_user.email)
@@ -337,7 +342,7 @@ def adminInterface():
 				tas = ta_list.split(',')
 				try:
 					for ta in tas:
-						ta_id = db(db.auth_user.rollno == int(ta)).select(db.auth_user.id)[0]
+						ta_id = db(db.auth_user.email == ta).select(db.auth_user.id)[0]
 						db.TaCourse.insert(ta=ta_id['id'],course=course)
 						db(db.auth_user.id == ta_id['id']).update(usertype='TA')
 					response.flash = 'TA allocation successful'
