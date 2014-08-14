@@ -15,7 +15,23 @@
   <!-- Always force latest IE rendering engine
        (even in intranet) & Chrome Frame
        Remove this if you use the .htaccess -->
-	   
+	
+  <!-- stuff added for bootstrap layouts -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href=""> <!--favicon-->
+ <!-- Bootstrap core CSS -->
+    <link href="{{=URL('static','css/bootstrap1.min.css')}}" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+    <link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
+
+
+<!-- stuff ends here -->
+  
   <meta charset="utf-8" />
 
   <!-- http://dev.w3.org/html5/markup/meta.name.html -->
@@ -96,7 +112,7 @@
         <div class="span12">
             <div class="page-header">
                 <h1>
-                    {{=response.title}}
+                    Assignment Portal
                     <small>{{=response.subtitle or ''}}</small>
                 </h1>
             </div>

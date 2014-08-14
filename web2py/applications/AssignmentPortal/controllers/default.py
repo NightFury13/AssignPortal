@@ -13,19 +13,14 @@ import time
 from multiprocessing import Process
 
 def index():
-    """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
+	msg = request.vars['msg']    
+	if not msg:
+		msg = 'Welcome'
+	response.flash = T(msg)
+	return dict(login_form=auth.login(),message=T('Hello World'))
 
-    if you need a simple wiki simply replace the two lines below with:
-    return auth.wiki()
-    """
-    msg = request.vars['msg']    
-    if not msg:
-	    msg = 'Welcome'
-    response.flash = T(msg)
-    return dict(login_form=auth.login(),message=T('Hello World'))
-
+def temp():
+	return locals()
 
 def autoAssignment():
 	form = SQLFORM(db.AutoAssign)
@@ -198,6 +193,7 @@ def solutionImageTag():
 def TAinterface():
 	if auth.user.usertype == 'TA':
 		problems = ''
+		prob_data = []
 		all_problems = db((db.TaProb.ta == auth.user.id) & (db.Problem.id == db.TaProb.prob) & (db.Problem.assign == db.Assign.id) &(db.Course.id == db.Assign.course)).select(db.Problem.id,db.Assign.id,db.Problem.question,db.Assign.name,db.Course.name, orderby = db.Assign.name)
 		if request.vars:
 			try:
@@ -205,8 +201,17 @@ def TAinterface():
 			except:
 				assign = int(request.vars['assign'][0])
 			problems = db((db.TaProb.ta == auth.user.id) & (db.Course.id == db.Assign.course)&(db.Problem.id == db.TaProb.prob) & (db.Problem.assign == assign) & (db.Assign.id == assign)).select(db.Problem.id,db.Assign.id,db.Problem.question,db.Assign.name,db.Course.name, orderby = db.Assign.name)
+			
+			for prob in problems:
+				prob_total = db(db.Submission.problem == prob['Problem']['id']).select()
+				prob_check = db((db.Submission.problem == prob['Problem']['id']) & (db.Submission.marked == True)).select()
+				prob_data.append([len(prob_total),len(prob_check)])
 		else:
                         problems=all_problems
+                        for prob in problems:
+							prob_total = db(db.Submission.problem == prob['Problem']['id']).select()
+							prob_check = db((db.Submission.problem == prob['Problem']['id']) & (db.Submission.marked == True)).select()
+							prob_data.append([len(prob_total),len(prob_check)])
                 assignments_of_ta={}
                 for i in range(len(all_problems)):
                     assignments_of_ta[all_problems[i].Assign.id]=[all_problems[i].Course.name,all_problems[i].Assign.name]

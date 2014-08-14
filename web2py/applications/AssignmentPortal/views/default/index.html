@@ -1,16 +1,8 @@
-{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
 
-{{if 'message' in globals():}}
-<h3>International Institute of Information Technology</h3>
 
-{{elif 'content' in globals():}}
-{{=content}}
-{{else:}}
-{{=BEAUTIFY(response._vars)}}
-{{pass}}
 
-{{block right_sidebar}}
+
 <div id='login'>
 	{{if not auth.user_id:}}
 		<div id='login-form'>
@@ -37,4 +29,3 @@
 		<br/>
 	{{pass}}
 </div>
-{{end}}
