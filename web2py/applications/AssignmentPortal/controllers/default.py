@@ -228,6 +228,16 @@ def studupload():
 		if request.vars:
 			if request.vars.assign:
 				assign_no=request.vars.assign
+				assign_deadline=db(db.Assign.id==assign_no).select(db.Assign.start_time,db.Assign.end_time).first()
+				current_time = datetime.datetime.now()
+				diff_af_time=(time.mktime(assign_deadline['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
+				diff_as_time= (time.mktime(current_time.timetuple()) - time.mktime(assign_deadline['start_time'].timetuple()))
+				if(diff_as_time<0):
+					session.flash =T("Assignment Submission Not Yet Started")
+					redirect(URL('default','studentInterface'))
+				elif(diff_af_time<0):
+					session.flash =T("Assignment Deadline Passed")
+					redirect(URL('default','studentInterface'))
 			else:
 				prob_no=request.vars.problem
 				assign_no=db(db.Problem.id==prob_no).select(db.Problem.assign).first()['assign']
