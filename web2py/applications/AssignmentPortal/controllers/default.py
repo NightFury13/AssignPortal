@@ -48,7 +48,6 @@ def uploadTarBall():
 				for x in range(len(assigns)):
 					all_assigns[assigns[x].id] = assigns[x].name
 					db.ImageStack.assign.requires = IS_IN_SET(all_assigns)
-					print "all",all_assigns
 		except:
 			pass
 	form = SQLFORM(db.ImageStack)
@@ -61,7 +60,6 @@ def uploadTarBall():
 #To-Do: # This here should only show assignments under the specific course selected. Lookup - Cascaded dropdowns#
 	    #########################################################################################################
 		assign_id = form.vars.assign
-		print "ass",assign_id
 		assign = db(db.Assign.id == assign_id).select(db.Assign.name).first()
 		assign = assign.name
 		msg = 'file uploaded successfully, extracting images now. It might take some time...'
@@ -415,6 +413,35 @@ def studentInterface():
 		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)
 	assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
         return locals()
+
+@auth.requires_login()
+def assignstatus():
+	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
+		msg = 'Access Denied!'
+		redirect(URL(r=request,f='index?msg=%s' % (msg)))
+
+	if request.vars:
+		assignments = db((auth.user.id==db.StudCourse.student)&(db.StudCourse.course==db.Assign.course)).select(db.Assign.ALL)
+		current_time = datetime.datetime.now()
+		past_flag=0
+		if int(request.vars.sort) == 1:
+			past_flag=1
+			past_assigns=[]
+			for i in assignments:
+				diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
+				diff_s_time= (time.mktime(current_time.timetuple()) - time.mktime(i['start_time'].timetuple()))
+				if(diff_f_time<0 and diff_s_time>0):
+					diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
+					past_assigns.append(i)
+		elif int(request.vars.sort) == 2:
+			current_assigns=[]
+			for i in assignments:
+				diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
+				diff_s_time= (time.mktime(current_time.timetuple()) - time.mktime(i['start_time'].timetuple()))
+				if(diff_f_time>0 and diff_s_time>0):
+					diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
+					current_assigns.append(i)
+	return locals()
 
 @auth.requires_login()
 def facultyInterface():

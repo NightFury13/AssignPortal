@@ -1,0 +1,21 @@
+{{extend 'layout.html'}}
+<h3>Choose the Assignment type</h3>
+<form method='post' action="{{=URL('default','assignstatus')}}">
+		<select  name='sort' value='sort-id'>
+			<option value=1>Past Assignments</option>
+			<option value=2>Active Assignments</option>
+			</select><br/>
+		<input type='submit' value='Submit'>
+	</form>
+{{try:}}
+{{if past_flag==0:}}
+{{for i in range(len(current_assigns)):}}
+<a href={{=URL('default','studupload?assign=%s' % current_assigns[i]['id'])}}> {{=current_assigns[i]['name']}}</a>
+{{pass}}
+{{else:}}
+{{for i in range(len(past_assigns)):}}
+<a href={{=URL('default','studupload?assign=%s' % past_assigns[i]['id'])}}> {{=past_assigns[i]['name']}}</a>
+{{pass}}
+{{pass}}
+{{except:}}
+{{pass}}
