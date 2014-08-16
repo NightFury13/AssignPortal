@@ -14,7 +14,28 @@
 
     <!-- Custom styles for this template -->
     	<link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
-    	
+    	<style>
+      div.flash {
+     font-weight: bold;
+     position: fixed;
+     padding: 10px;
+     top: 48px;
+     right: 250px;
+      min-width: 280px;
+     opacity: 0.95;
+     margin: 0px 0px 10px 10px;
+       vertical-align: middle;
+     cursor: pointer;
+     color: #FFF;
+     background-color: #000;
+     border: 2px solid #FFF;
+     border-radius: 8px;
+     background-image: -moz-linear-gradient(90deg, #222, #000);
+     background-repeat: repeat-x;
+     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+     z-index: 2000;
+     }
+    </style>
 
     	{{
   		response.files.insert(0,URL('static','css/web2py.css'))
@@ -30,10 +51,10 @@
   	
 	</head>
 
-	<body background="{{=URL('static','images/back.jpg')}}">
-
+	
+	{{if response.flash:}}
 	<div class="flash">{{=response.flash or ''}}</div>
-
+	{{pass}}
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">

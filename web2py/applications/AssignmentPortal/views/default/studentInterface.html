@@ -15,6 +15,28 @@
     <!-- Custom styles for this template -->
     	<link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
     	
+      <style>
+      div.flash {
+     font-weight: bold;
+     position: fixed;
+     padding: 10px;
+     top: 48px;
+     right: 250px;
+      min-width: 280px;
+     opacity: 0.95;
+     margin: 0px 0px 10px 10px;
+       vertical-align: middle;
+     cursor: pointer;
+     color: #FFF;
+     background-color: #000;
+     border: 2px solid #FFF;
+     border-radius: 8px;
+     background-image: -moz-linear-gradient(90deg, #222, #000);
+     background-repeat: repeat-x;
+     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+     z-index: 2000;
+     }
+    </style>
 
     	{{
   		response.files.insert(0,URL('static','css/web2py.css'))
@@ -30,9 +52,10 @@
   	
 	</head>
 
-	<body background="{{=URL('static','images/back.jpg')}}">
+	<body>
+    {{if response.flash:}}
 		<div class="flash">{{=response.flash or ''}}</div>
-
+    {{pass}}
 		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     	  <div class="container-fluid">
     	    <div class="navbar-header">
@@ -42,7 +65,7 @@
             	<span class="icon-bar"></span>
             	<span class="icon-bar"></span>
           	  </button>
-          	  <a class="navbar-brand" href="{{=URL('default','TAinterface')}}">Shiksha</a>
+          	  <a class="navbar-brand" href="{{=URL('default','studentInterface')}}">Shiksha</a>
         	</div>
         	<div class="navbar-collapse collapse">
           		<ul class="nav navbar-nav navbar-right">
@@ -117,5 +140,22 @@
       	</div>
 				</div>
    		</div>	
+         <!-- The javascript =============================================
+       (Placed at the end of the document so the pages load faster) -->
+  <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
+  <script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
+  <!--[if lt IE 7 ]>
+      <script src="{{=URL('static','js/dd_belatedpng.js')}}"></script>
+      <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
+      <![endif]-->
+  
+  {{if response.google_analytics_id:}}
+  <script src="{{=URL('static','js/analytics.min.js')}}"></script>
+  <script type="text/javascript">
+  analytics.initialize({
+    'Google Analytics':{trackingId:'{{=response.google_analytics_id}}'} 
+  });</script>
+  {{pass}}
+  <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
 	</body>
 </html>
