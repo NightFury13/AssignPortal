@@ -262,14 +262,17 @@ def studupload():
 					redirect(URL('default','studentInterface'))
 
 				already_submitted= db((db.Submission.problem == form.vars.problem)&(db.Submission.student == form.vars.student)).select()
-				if len(already_submitted)==0:			
+				stream = open(os.path.join(request.folder,'uploads',form.vars.image),'rb')
+				if len(already_submitted)==0:		
 					db.Submission.insert(student=form.vars.student,course=form.vars.course,\
-						assign=form.vars.assign,problem=form.vars.problem,image=form.vars.image,\
+						assign=form.vars.assign,problem=form.vars.problem,image=db.Submission.image.store(stream,form.vars.image),\
 						answer=form.vars.answer,marked=form.vars.marked)
 				else:
+					stream = open(os.path.join(request.folder,'uploads',form.vars.image),'rb')
 					db((db.Submission.student==form.vars.student)&(db.Submission.course==form.vars.course)
 						&(db.Submission.assign==form.vars.assign)&(db.Submission.problem==form.vars.problem))\
-					.update(image=form.vars.image,answer=form.vars.answer,marked=form.vars.marked)
+					.update(image=db.Submission.image.store(stream,form.vars.image),answer=form.vars.answer,marked=form.vars.marked)
+				stream.close()
 				session.flash =T("Assignment Uploaded Succesfully")
 				redirect(URL('default','studentInterface'))
 			elif form.errors:
