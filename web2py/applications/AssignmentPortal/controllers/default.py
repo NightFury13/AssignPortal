@@ -417,7 +417,7 @@ def studentInterface():
 	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
-		
+
 	if request.vars:
 		try:
 			assign = int(request.vars['assign'])
@@ -425,10 +425,15 @@ def studentInterface():
 			assign = int(request.vars['assign'][0])
 		
                 course = db((db.Assign.id == assign) &(db.Assign.course == db.Course.id)).select(db.Course.id).first()
-		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)	
-	else:	
-		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)
-	assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
+                status = db((db.Submission.student == auth.user.id) & (db.Submission.assign == assign) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
+	
+        else:	
+                status = db((db.Submission.student == auth.user.id) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
+	
+        assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
+        print status
         return locals()
 
 @auth.requires_login()

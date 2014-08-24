@@ -109,29 +109,43 @@
 			  			</div>
 			 		</div>
 			 		<div id='search-result'>
-						{{if userData:}}
+						{{if status:}}
 							<h2 class="sub-header" name="submissions">Submission :</h2>
-							<h4>Submission :</h4>
 								<div class="table-responsive">
-								{{for submission in userData:}}
-									<table class="table table-striped">
-              							<thead>
- 			              					<tr>
-    		             	 					<th>Assignment</th>
-        		         	 					<th>Marks</th>
-        		         	 					<th>Comments</th>
-            		     					</tr>
-         			    				</thead>
-										<tbody>
+								<table class="table table-striped">
+							     	<thead>
+ 			           					<tr>
+    		           	 					<th>Problem</th>
+        		       	 					<th>Marks</th>
+        		          					<th>Comments</th>
+											<th>Status</th>
+            		     				</tr>
+         			    			</thead>
+									{{for submission in status:}}
+									<tbody>
+										{{if userData:}}
+											{{for sub in userData:}}
+												{{if sub['Submission']['id'] == submission['Submission']['id']:}}
+													<tr>
+													<td><img src="{{=URL('download',args=sub['Submission']['image'])}}" width=30%/></td>
+													<td>{{=sub['SubmitReview']['marks']}}</td> 
+													<td>{{=sub['SubmitReview']['comments']}}</td>
+													<td>Marked</td>
+												{{pass}}
+											{{pass}}
+										{{else:}}
 											<tr>
-												<td><img src="{{=URL('download',args=submission['Submission']['image'])}}" width=30%/></td>
-												<td>{{=submission['SubmitReview']['marks']}}</td> 
-												<td>{{=submission['SubmitReview']['comments']}}</td>
+												<td>{{=submission['Problem']['question']}}</td>
+												<td>--</td>
+												<td>--</td>
+												<td>Alloted to TA</td>
 											</tr>
-										</tbody>
-									</table>										
-								{{pass}}
-								</div>
+										{{pass}}
+										</tr>
+									{{pass}}
+								</tbody>
+							</table>										
+							</div>
 						{{else:}}
 							<h4>No submission for this assignment</h4>
 						{{pass}}
