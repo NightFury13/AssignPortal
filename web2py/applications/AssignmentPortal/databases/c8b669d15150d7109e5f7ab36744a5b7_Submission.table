@@ -10,7 +10,7 @@ p5
 I00
 sS'sortable'
 p6
-I5
+I6
 sS'sql'
 p7
 S'CHAR(512)'
@@ -22,7 +22,7 @@ sS'type'
 p10
 S'upload'
 p11
-ssS'assign'
+ssS'marked'
 p12
 (dp13
 g4
@@ -30,18 +30,52 @@ I512
 sg5
 I00
 sg6
-I3
+I8
 sg7
-S'INTEGER REFERENCES Assign (id) ON DELETE CASCADE'
+S'CHAR(1)'
 p14
 sg9
 I00
 sg10
-S'reference Assign'
+S'boolean'
 p15
-ssS'student'
+ssS'assign'
 p16
 (dp17
+g4
+I512
+sg5
+I00
+sg6
+I4
+sg7
+S'INTEGER REFERENCES Assign (id) ON DELETE CASCADE'
+p18
+sg9
+I00
+sg10
+S'reference Assign'
+p19
+ssS'course'
+p20
+(dp21
+g4
+I512
+sg5
+I00
+sg6
+I3
+sg7
+S'INTEGER REFERENCES Course (id) ON DELETE CASCADE'
+p22
+sg9
+I00
+sg10
+S'reference Course'
+p23
+ssS'student'
+p24
+(dp25
 g4
 I512
 sg5
@@ -50,49 +84,49 @@ sg6
 I2
 sg7
 S'INTEGER REFERENCES auth_user (id) ON DELETE CASCADE'
-p18
-sg9
-I00
-sg10
-S'reference auth_user'
-p19
-ssS'answer'
-p20
-(dp21
-g4
-I512
-sg5
-I00
-sg6
-I6
-sg7
-S'CHAR(512)'
-p22
-sg9
-I00
-sg10
-S'string'
-p23
-ssS'problem'
-p24
-(dp25
-g4
-I512
-sg5
-I00
-sg6
-I4
-sg7
-S'INTEGER REFERENCES Problem (id) ON DELETE CASCADE'
 p26
 sg9
 I00
 sg10
-S'reference Problem'
+S'reference auth_user'
 p27
-ssS'id'
+ssS'answer'
 p28
 (dp29
+g4
+I512
+sg5
+I00
+sg6
+I7
+sg7
+S'CHAR(512)'
+p30
+sg9
+I00
+sg10
+S'string'
+p31
+ssS'problem'
+p32
+(dp33
+g4
+I512
+sg5
+I00
+sg6
+I5
+sg7
+S'INTEGER REFERENCES Problem (id) ON DELETE CASCADE'
+p34
+sg9
+I00
+sg10
+S'reference Problem'
+p35
+ssS'id'
+p36
+(dp37
 g4
 I512
 sg5
@@ -101,9 +135,9 @@ sg6
 I1
 sg7
 S'INTEGER PRIMARY KEY AUTOINCREMENT'
-p30
+p38
 sg9
 I00
 sg10
-g28
+g36
 ss.

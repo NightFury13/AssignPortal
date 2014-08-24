@@ -139,8 +139,9 @@ db.define_table('TaCourse',
 
 db.define_table('StudCourse',
 		db.Field('student',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
-		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name'))
-		)
+		db.Field('course',db.Course,requires=IS_IN_DB(db,'Course.id','Course.name')),
+                primarykey=['student','course']
+                )
 
 db.define_table('FacCourse',
 		db.Field('faculty',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),

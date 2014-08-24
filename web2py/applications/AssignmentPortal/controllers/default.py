@@ -397,8 +397,10 @@ def registerCourse():
 	db.StudCourse.student.default = auth.user.id
 	db.StudCourse.student.readable = False
 	db.StudCourse.student.writable = False
-	form = SQLFORM(db.StudCourse)
+	#db.StudCourse.course.requires=IS_NOT_IN_DB(db(db.StudCourse.student==auth.user.id),db.StudCourse.course)
+        form = SQLFORM(db.StudCourse)
 	if form.process().accepted:
+                print "yes"
 		response.flash = 'Course Registered Successfully'
 	else:
 		response.flash = 'Course Registration Failed'
