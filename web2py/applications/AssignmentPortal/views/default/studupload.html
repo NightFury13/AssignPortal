@@ -110,21 +110,7 @@ Choose Assignment:  <select id='assign' name='assign' value='assign-id'>
 			 	 			</div>
 			  			</div>
 			 		</div>
-{{try:}}
-{{=form}}
-{{except:}}
-<form name="uploadassignment" action="{{=URL('default','studupload')}}" method="get">
-Choose Assignment:  <select id='assign' name='assign' value='assign-id'>
-			{{for i in assignments:}}
-			<option value={{=i['Assign']['id']}}>{{=i['Course']['name']}} / {{=i['Assign']['name']}}</option>
-			{{pass}}
-		</select><br/>
-		<input type='submit' value='Submit'>
-</form>
-{{pass}}
-</div>
-</div>
-</div>
+
  <!-- The javascript =============================================
        (Placed at the end of the document so the pages load faster) -->
   <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
