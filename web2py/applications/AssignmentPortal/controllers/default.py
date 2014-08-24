@@ -405,7 +405,6 @@ def registerCourse():
                     redirect(URL('default','registerCourse'))
         form = SQLFORM(db.StudCourse)
 	if form.process().accepted:
-                print "yes"
 		response.flash = 'Course Registered Successfully'
         elif form.errors:
 		response.flash = 'Course Registration Failed'
@@ -433,7 +432,6 @@ def studentInterface():
 		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
 	
         assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
-        print status
         return locals()
 
 @auth.requires_login()
