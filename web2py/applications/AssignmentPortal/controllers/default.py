@@ -397,12 +397,17 @@ def registerCourse():
 	db.StudCourse.student.default = auth.user.id
 	db.StudCourse.student.readable = False
 	db.StudCourse.student.writable = False
-	#db.StudCourse.course.requires=IS_NOT_IN_DB(db(db.StudCourse.student==auth.user.id),db.StudCourse.course)
+        if request.vars:
+            course_id=db(db.StudCourse.student==auth.user.id).select(db.StudCourse.course)
+            for i in course_id:
+                if int(i['course'])==int(request.vars['course']):
+                    session.flash = "Already Registered for Course"
+                    redirect(URL('default','registerCourse'))
         form = SQLFORM(db.StudCourse)
 	if form.process().accepted:
                 print "yes"
 		response.flash = 'Course Registered Successfully'
-	else:
+        elif form.errors:
 		response.flash = 'Course Registration Failed'
 	cur_course=db((db.StudCourse.student==auth.user.id) & (db.Course.id == db.StudCourse.course)).select(db.Course.name,db.Course.code)
 	return locals()
