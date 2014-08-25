@@ -118,7 +118,7 @@ def processFile(filename):
 		assign_name = root.attrib['name']
 		course_code = root.attrib['ccode']
 		course_id = db(db.Course.code == course_code).select(db.Course.id)[0]
-		assign_num = root.attrib['num']
+#		assign_num = root.attrib['num']
 		assign_start_time = root.attrib['start']
 		assign_end_time = root.attrib['end']
 		assign_id = db.Assign.insert(course=course_id,num=assign_num,start_time=assign_start_time,end_time=assign_end_time,name=assign_name)
@@ -134,7 +134,7 @@ def processFile(filename):
 			ta_list = (child.find('ta').text).split(',')
 	
 			for ta_mail in ta_list:
-				ta_id = db(db.auth_user.email == ta_mail).select(db.auth_user.id,db.auth_user.email)[0]
+				ta_id = db(db.auth_user.email == int(ta_mail)).select(db.auth_user.id,db.auth_user.email)[0]
 
 			########################################################################################
 			## We need to take care of something like making the user a TA if he aint already one ##
@@ -405,6 +405,7 @@ def registerCourse():
                     redirect(URL('default','registerCourse'))
         form = SQLFORM(db.StudCourse)
 	if form.process().accepted:
+                print "yes"
 		response.flash = 'Course Registered Successfully'
         elif form.errors:
 		response.flash = 'Course Registration Failed'
@@ -416,22 +417,23 @@ def studentInterface():
 	if auth.user.usertype!='Student' and auth.user.usertype!='TA':
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
-
+	
+	problems = ''	
 	if request.vars:
 		try:
 			assign = int(request.vars['assign'])
 		except:
 			assign = int(request.vars['assign'][0])
 		
-                course = db((db.Assign.id == assign) &(db.Assign.course == db.Course.id)).select(db.Course.id).first()
-                status = db((db.Submission.student == auth.user.id) & (db.Submission.assign == assign) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
-		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
+		course = db((db.Assign.id == assign) &(db.Assign.course == db.Course.id)).select(db.Course.id).first()
+		status = db((db.Submission.student == auth.user.id) & (db.Submission.assign == assign) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)	
+		problems = db((db.Problem.assign == assign) & (db.Problem.assign == db.Assign.id)).select(db.Problem.question,db.Assign.name, orderby = db.Assign.id)
+	else:	
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)
+		status = db((db.Submission.student == auth.user.id) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
 	
-        else:	
-                status = db((db.Submission.student == auth.user.id) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
-		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
-	
-        assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
+	assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
         return locals()
 
 @auth.requires_login()
