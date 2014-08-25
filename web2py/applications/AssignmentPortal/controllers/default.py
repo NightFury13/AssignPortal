@@ -118,7 +118,7 @@ def processFile(filename):
 		assign_name = root.attrib['name']
 		course_code = root.attrib['ccode']
 		course_id = db(db.Course.code == course_code).select(db.Course.id)[0]
-#		assign_num = root.attrib['num']
+		assign_num = root.attrib['num']
 		assign_start_time = root.attrib['start']
 		assign_end_time = root.attrib['end']
 		assign_id = db.Assign.insert(course=course_id,num=assign_num,start_time=assign_start_time,end_time=assign_end_time,name=assign_name)
@@ -134,7 +134,7 @@ def processFile(filename):
 			ta_list = (child.find('ta').text).split(',')
 	
 			for ta_mail in ta_list:
-				ta_id = db(db.auth_user.email == int(ta_mail)).select(db.auth_user.id,db.auth_user.email)[0]
+				ta_id = db(db.auth_user.email == ta_mail).select(db.auth_user.id,db.auth_user.email)[0]
 
 			########################################################################################
 			## We need to take care of something like making the user a TA if he aint already one ##
@@ -405,7 +405,6 @@ def registerCourse():
                     redirect(URL('default','registerCourse'))
         form = SQLFORM(db.StudCourse)
 	if form.process().accepted:
-                print "yes"
 		response.flash = 'Course Registered Successfully'
         elif form.errors:
 		response.flash = 'Course Registration Failed'
