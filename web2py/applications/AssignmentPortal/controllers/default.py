@@ -131,6 +131,17 @@ def processFile(filename):
 			prob_end_time = child.attrib['end']
 			prob_id = db.Problem.insert(assign=assign_id,num=prob_num,question=prob_statement,image=prob_image,start_time=prob_st_time,end_time=prob_end_time)
 			
+			check_options = (child.find('checkoptions').text).split(',')
+			for opt in check_options:
+				param_text = opt.split('*')[0]
+				param_id = db.ProbParam.insert(prob=prob_id, param=param_text)
+				param_fields = (opt.split('*')[1]).split('/')
+
+				for fld in param_fields:
+					paramopt_opt = fld.split('-')[0]
+					paramopt_weight = fld.split('-')[1]
+					paramopt_id = db.ParamOption.insert(prob=prob_id,param=param_id,opt=paramopt_opt,weight=paramopt_weight)
+
 			ta_list = (child.find('ta').text).split(',')
 	
 			for ta_mail in ta_list:

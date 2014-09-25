@@ -107,30 +107,30 @@
 								</form>	
 			 	 			</div>
 			  			</div>
-			 		</div>
-          {{if problems:}}
-          <div name='search-box'>
-                  <h1 class="page-header">Assignments :</h1>
-                  <ul>
+					</div>
+					{{if problems:}}
+					<div name='search-box'>
+						 <h1 class="page-header">Assignments :</h1>
+						  <ul>
 
-                  {{name = ''}}
-                  {{for element in problems:}}
-                    
-                    {{if name != element['Assign']['name']:}}
-                    <li><bold>
-                    <h4>{{=element['Assign']['name']}}</h4>
-                       </bold>
-                      {{name = element['Assign']['name']}}
-                      </li>
-                    {{pass}}
-                    <li>
-                        {{=element['Problem']['question']}}
-                    </li>
-                  {{pass}}
-              </ul>
-          </div>
-          {{pass}}
-          <br/><br/>
+							   {{name = ''}}
+							    {{for element in problems:}}
+
+								 {{if name != element['Assign']['name']:}}
+								  <li><bold>
+								   <h4>{{=element['Assign']['name']}}</h4>
+								    </bold>
+									 {{name = element['Assign']['name']}}
+									  </li>
+									   {{pass}}
+									    <li>
+										 {{=element['Problem']['question']}}
+										  </li>
+										   {{pass}}
+										    </ul>
+											 </div>
+											  {{pass}}
+											   <br/><br/>
 			 		<div id='search-result'>
 						{{if status:}}
 							<h2 class="sub-header" name="submissions">Submission :</h2>

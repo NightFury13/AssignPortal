@@ -127,6 +127,17 @@ db.define_table('Problem',
 		db.Field('end_time','datetime',default=request.now)
 		)
 
+db.define_table('ProbParam',
+		db.Field('prob',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.question')),
+		db.Field('param','string'))
+
+db.define_table('ParamOption',
+		db.Field('prob',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.question')),
+		db.Field('param',db.ProbParam,requires=IS_IN_DB(db,'ProbParam.id','ProbParam.param')),
+		db.Field('opt','string'),
+		db.Field('weight','integer')
+		)
+
 db.define_table('TaProb',
 		db.Field('ta',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
 		db.Field('prob',db.Problem,requires=IS_IN_DB(db,'Problem.id','Problem.num'))

@@ -80,25 +80,22 @@
 	        <div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
 	          <ul class="nav nav-sidebar">
 	            <li class="active"><a href="#search-box">Search</a></li>
+		            <li><a href="#assigned-problems">Assigned Problems</a></li>    	      
         	  </ul>
         	  <ul class="nav nav-sidebar">
         	    <li><a href="{{=URL('default','studentInterface')}}">Access Student Interface</a></li>
          	 </ul>
-			{{try:}}
-			 <ul class="nav nav-sidebar">
-			 	<li>{{=form}}</li>
-			 </ul>
-			{{except:}}
-			{{pass}}
   	        </div>
   	       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     	    	<br/><br/><br/> 
-    	      	<div name='checking'>
-    	      		<h1 class="page-header">Submission :</h1>
+    	      	<div name='search-box'>
+    	      		<h1 class="page-header">Search :</h1>
     	      		<div class="row placeholders">
     	       			<div class="col-xs-6 col-sm-3 placeholder">
 							
 {{try:}}
+{{=form}}
+<br/>
 <div id='search-result'>
 		{{if submission:}}
 			<img src="{{=URL('download',args=submission['image'])}}" width=500px />
