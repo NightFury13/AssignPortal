@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+					
+<assignment name="AI - Assignment1" num="1" start="2014-06-24 17:50:44" end="2015-06-25 17:50:44" ccode="ICS201">
+	<!--Now add on the below for new questions-->
+		<question num="1" start="2014-06-24 17:50:44" end="2015-06-24 17:50:44" difficulty="1">
+	        <ta>student1@students.iiit.ac.in</ta>
+			<image>None</image>
+			<statement>What is the time complexity of Binary Search Algorithm?</statement>
+			<checkoptions>Correctness*correct-10/partially correct-5/incorrect-0*,Neatness*neat-5/ok-3/shabby-0*</checkoptions>
+		</question>
+	<!-- copy paste above code for more questions-->
+					
+</assignment>

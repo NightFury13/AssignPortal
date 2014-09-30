@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+					
+<assignment name="Assignment_Name" num="Assign_Num" start="2014-06-24 17:50:44" end="2015-06-25 17:50:44" ccode="Course_Code">
+	<!--Now add on the below for new questions-->
+		<question num="1" start="2014-06-24 17:50:44" end="2015-06-24 17:50:44" difficulty="1">
+	        <ta>stud1@students.iiit.ac.in,stud2@students.iiit.ac.in</ta>
+			<image>None</image>
+			<statement>What is the time complexity of Binary Search Algorithm?</statement>
+			<checkoptions>Option1*marker1-weight1/marker2-weight2*,Option2*marker1-weight1/marker2-weight2*</checkoptions>
+		</question>
+	<!-- copy paste above code for more questions-->
+					
+</assignment>
