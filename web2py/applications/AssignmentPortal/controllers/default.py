@@ -300,59 +300,64 @@ def studupload():
 @auth.requires_login()
 def checking():
 	if auth.user.usertype == 'TA':
-		if request.vars:
+		if request.vars['problem']:
 			try:
 				prob = int(request.vars['problem'])
+				submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  ((db.Submission.marked == None) or (db.Submission.marked==False))).select().first()
+				try:
+					p_id = submission['problem']
+					check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
+					if len(check)==0:
+						redirect(URL('default','TAinterface'))
+				except:
+					if(submission==None):
+						session.flash = 'All Answer Sheets Checked'
+						redirect(URL('default','TAinterface'))
+					else:
+						session.flash = 'Access Denied'
+						redirect(URL('default','TAinterface'))
+				all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
+				params = {}
+				for para in all_params:
+					temp = para['param']
+					params[temp] = []
+					opts = db((db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
+					for opt in opts:
+						#print 'ops :'+str(opt['opt'])+'-'+str(opt['weight'])
+						params[temp].append(opt['opt']+'('+str(opt['weight'])+')')
+
 			except:
 				prob = int(request.vars['problem'][0])
-			
-			submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  ((db.Submission.marked == None) or (db.Submission.marked==False))).select().first()
-			try:
-				p_id = submission['problem']
-				check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
-				if len(check)==0:
-					redirect(URL('default','TAinterface'))
-			except:
-				if(submission==None):
-					session.flash = 'All Answer Sheets Checked'
-					redirect(URL('default','TAinterface'))
-				else:
-					session.flash = 'Access Denied'
-					redirect(URL('default','TAinterface'))
-			
-			all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
-			params = {}
-			for para in all_params:
-				temp = para['param']
-				params[temp] = []
-				opts = db((db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
 
-				for opt in opts:
-					#print 'ops :'+str(opt['opt'])+'-'+str(opt['weight'])
-					params[temp].append(opt['opt']+'('+str(opt['weight'])+')')
-
-
-			if submission:
+			if request.vars['opt']:
 				try:
-					all_vars = request.vars
+					all_opts = request.vars['opt']
+					comms = request.vars['comments']
+					print all_opts,comms
+
 					db.SubmitReview.assign.default=submission['assign']
 					db.SubmitReview.student.default=submission['student']
 					db.SubmitReview.ta.default=auth.user_id
 					db.SubmitReview.problem.default=prob
-					form = SQLFORM.factory(db.SubmitReview)
-					if form.process().accepted:
-						session.flash = 'Marks entered succesfully'
-						db(db.Submission.id == submission['id']).update(marked = True)
-						user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.auth_user.email)[0]
-						os.system('echo "Your submission has been marked, check portal now!" | mail -s SolutionChecked '+ user['email'])
-						redirect(URL(r=request,f='checking?problem=%d' %(prob)))
-					else:
-						session.flash = 'Error entering the marks'
+					db.SubmitReview.comments.default=comms
+					marks = 0
+					for option in all_opts:
+						p = db(db.ProbParam.param == option.split('+')[0]).select(db.ProbParam.id)[0]
+						o = db(db.ParamOption.opt == option.split('+')[1].split('(')[0]).select(db.ParamOption.id)[0]
+						db.SubRevParam.insert(submission=submission['id'],student=submission['student'],param=p)
+						marks += int(option.split('(')[1].split(')')[0])
+					db.SubmitReview.marks.default=marks
+					session.flash = 'Marks entered succesfully'
+					db(db.Submission.id == submission['id']).update(marked = True)
+					user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.auth_user.email)[0]
+					os.system('echo "Your submission has been marked, check portal now!" | mail -s SolutionChecked '+ user['email'])
+					redirect(URL(r=request,f='checking?problem=%d' %(prob)))
+
 				except:
-					session.flash = "Error in the checking fields"
-			else:
-				session.flash = 'All solutions checked!'
-				redirect(URL(r=request,f='TAinterface'))
+					session.flash = 'Error entering the marks'
+#			else:
+#				session.flash = 'All solutions checked!'
+#				redirect(URL(r=request,f='TAinterface'))
 		else:
 			response.flash = 'Click on one of the assigned problems'
 			redirect(URL(r=request,f='TAinterface'))

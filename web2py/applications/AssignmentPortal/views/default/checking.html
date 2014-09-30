@@ -96,11 +96,15 @@
                       
                       <h4>{{=param}}</h4>
                         {{for opt in params[param]:}}
-                          <input type="radio" value={{=opt}}>{{=opt}}<br/>
+                          <input type="checkbox" value={{=param+'+'+opt}} name="opt">{{=opt}}<br/>
                         {{pass}}
+
             
                     {{pass}}
-                    <br/>
+                    <h4>Comments :</h4>
+                    <input type="textbox" name="comments">
+                    <br/><br/>
+                    <input type="hidden" value={{=prob}} name='problem'>
                     <input type="submit" value="Submit">
                   </form>
                   <div class="col-xs-6 col-sm-3 placeholder">
