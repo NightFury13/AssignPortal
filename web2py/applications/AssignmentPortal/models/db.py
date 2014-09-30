@@ -187,7 +187,13 @@ db.define_table('SubmitReview',
 		db.Field('marks','double'),
 		db.Field('comments','text')
 		)
-		
+
+db.define_table('SubRevParam',
+		db.Field('subrev',db.SubmitReview,requires=IS_IN_DB(db,'SubmitReview.id','SubmitReview.id')),
+		db.Field('student',db.auth_user,requires=IS_IN_DB(db,'auth_user.id','auth_user.first_name')),
+		db.Field('param',db.ProbParam,requires=IS_IN_DB(db,'ProbParam.id','ProbParam.param')),
+		db.Field('opt',db.ParamOption,requires=IS_IN_DB(db,'ParamOption.id','ParamOption.opt'))
+		)
 
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
