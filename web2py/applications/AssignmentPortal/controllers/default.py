@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-#########################################################################
-# @arnav : search for the tag 'To-Do' to see whats to be done. 			#
-#########################################################################
-
 import os
 import tarfile
 import xml.etree.ElementTree as ET
@@ -311,46 +307,52 @@ def checking():
 				prob = int(request.vars['problem'][0])
 			
 			submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  ((db.Submission.marked == None) or (db.Submission.marked==False))).select().first()
-                        try:
+			try:
 				p_id = submission['problem']
 				check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
 				if len(check)==0:
 					redirect(URL('default','TAinterface'))
-
 			except:
-                                if(submission==None):
-                                    session.flash = 'All Answer Sheets Checked'
-                                    redirect(URL('default','TAinterface'))
+				if(submission==None):
+					session.flash = 'All Answer Sheets Checked'
+					redirect(URL('default','TAinterface'))
+				else:
+					session.flash = 'Access Denied'
+					redirect(URL('default','TAinterface'))
+			
+			all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
+			params = {}
+			for para in all_params:
+				temp = para['param']
+				params[temp] = []
+				opts = db((db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
 
-				session.flash = 'Access Denied'
-				redirect(URL('default','TAinterface'))
-			db.SubmitReview.id.readable=False
-			db.SubmitReview.id.writable=False
-			db.SubmitReview.student.readable=False
-			db.SubmitReview.student.writable=False
-			db.SubmitReview.ta.readable=False
-			db.SubmitReview.ta.writable=False
-			db.SubmitReview.problem.readable=False
-			db.SubmitReview.problem.writable=False 
-			db.SubmitReview.assign.readable=False
-			db.SubmitReview.assign.writable=False
+				for opt in opts:
+					#print 'ops :'+str(opt['opt'])+'-'+str(opt['weight'])
+					params[temp].append(opt['opt']+'('+str(opt['weight'])+')')
+
+
 			if submission:
-                           db.SubmitReview.assign.default=submission['assign']
-                           db.SubmitReview.student.default=submission['student']
-                           db.SubmitReview.ta.default=auth.user_id
-                           db.SubmitReview.problem.default=prob
-                           form = SQLFORM(db.SubmitReview)
-                           if form.process().accepted:
-                               session.flash = 'Marks entered succesfully'
-                               db(db.Submission.id == submission['id']).update(marked = True)
-                               user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.auth_user.email)[0]
-                               os.system('echo "Your submission has been marked, check portal now!" | mail -s SolutionChecked '+ user['email'])
-                               redirect(URL(r=request,f='checking?problem=%d' %(prob)))
-                           else:
-                               session.flash = 'Error entering the marks'
+				try:
+					all_vars = request.vars
+					db.SubmitReview.assign.default=submission['assign']
+					db.SubmitReview.student.default=submission['student']
+					db.SubmitReview.ta.default=auth.user_id
+					db.SubmitReview.problem.default=prob
+					form = SQLFORM.factory(db.SubmitReview)
+					if form.process().accepted:
+						session.flash = 'Marks entered succesfully'
+						db(db.Submission.id == submission['id']).update(marked = True)
+						user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.auth_user.email)[0]
+						os.system('echo "Your submission has been marked, check portal now!" | mail -s SolutionChecked '+ user['email'])
+						redirect(URL(r=request,f='checking?problem=%d' %(prob)))
+					else:
+						session.flash = 'Error entering the marks'
+				except:
+					session.flash = "Error in the checking fields"
 			else:
-                            session.flash = 'All solutions checked!'
-                            redirect(URL(r=request,f='TAinterface'))
+				session.flash = 'All solutions checked!'
+				redirect(URL(r=request,f='TAinterface'))
 		else:
 			response.flash = 'Click on one of the assigned problems'
 			redirect(URL(r=request,f='TAinterface'))

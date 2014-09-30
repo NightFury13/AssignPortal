@@ -89,27 +89,37 @@
   	       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     	    	<br/><br/><br/> 
     	      	<div name='search-box'>
-    	      		<h1 class="page-header">Search :</h1>
-    	      		<div class="row placeholders">
-    	       			<div class="col-xs-6 col-sm-3 placeholder">
-							
-{{try:}}
-{{=form}}
-<br/>
-<div id='search-result'>
-		{{if submission:}}
-			<img src="{{=URL('download',args=submission['image'])}}" width=500px />
-			<br/>
-			<br/>
-		{{pass}}
-</div>
-{{except:}}
-{{pass}}
-			 	 		</div>
-			  		</div>
-			 	</div>
-</div>
-</div>
+    	      		<h1 class="page-header">Submission :</h1>
+    	      		<div>
+    	       			<form method="get" action="{{=URL('default','checking')}}">
+                    {{for param in params:}}
+                      
+                      <h4>{{=param}}</h4>
+                        {{for opt in params[param]:}}
+                          <input type="radio" value={{=opt}}>{{=opt}}<br/>
+                        {{pass}}
+            
+                    {{pass}}
+                    <br/>
+                    <input type="submit" value="Submit">
+                  </form>
+                  <div class="col-xs-6 col-sm-3 placeholder">
+                  <br/>
+                  {{try:}}
+                    <div id='search-result'>
+		                {{if submission:}}
+			                 <img src="{{=URL('download',args=submission['image'])}}" width=500px />
+			                 <br/>
+			                 <br/>
+		                {{pass}}
+                    </div>
+                  {{except:}}
+                    {{pass}}
+			 	 		      </div>
+			  		    </div>
+			 	      </div>
+            </div>
+  </div>
 </div>
 <!-- The javascript =============================================
        (Placed at the end of the document so the pages load faster) -->
