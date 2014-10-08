@@ -92,7 +92,9 @@
     	      		<h1 class="page-header">Submission :</h1>
     	      		<div>
     	       			<form method="get" action="{{=URL('default','checking')}}">
-                    {{for param in params:}}
+					{{try:}}
+
+			{{for param in params:}}
                       
                       <h4>{{=param}}</h4>
                         {{for opt in params[param]:}}
@@ -100,13 +102,15 @@
                         {{pass}}
 
             
-                    {{pass}}
+			{{pass}}
                     <h4>Comments :</h4>
                     <input type="textbox" name="comments">
                     <br/><br/>
                     <input type="hidden" value={{=prob}} name='problem'>
                     <input type="submit" value="Submit">
                   </form>
+			{{except:}}
+			{{pass}}
                   <div class="col-xs-6 col-sm-3 placeholder">
                   <br/>
                   {{try:}}

@@ -303,50 +303,50 @@ def checking():
 		if request.vars['problem']:
 			try:
 				prob = int(request.vars['problem'])
-				submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  ((db.Submission.marked == None) or (db.Submission.marked==False))).select().first()
-				try:
-					p_id = submission['problem']
-					check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
-					if len(check)==0:
-						redirect(URL('default','TAinterface'))
-				except:
-					if(submission==None):
-						session.flash = 'All Answer Sheets Checked'
-						redirect(URL('default','TAinterface'))
-					else:
-						session.flash = 'Access Denied'
-						redirect(URL('default','TAinterface'))
-				all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
-				params = {}
-				for para in all_params:
-					temp = para['param']
-					params[temp] = []
-					opts = db((db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
-					for opt in opts:
-						#print 'ops :'+str(opt['opt'])+'-'+str(opt['weight'])
-						params[temp].append(opt['opt']+'('+str(opt['weight'])+')')
-
 			except:
-				prob = int(request.vars['problem'][0])
+				prob=int(request.vars['problem'][0])
+			submission = db((db.Submission.problem == prob) & (db.Submission.student is not None) &  ((db.Submission.marked == None) or (db.Submission.marked==False))).select().first()
+			try:
+				p_id = submission['problem']
+				check = db((db.TaProb.ta == auth.user.id) & (db.TaProb.prob == p_id)).select()
+				if len(check)==0:
+					redirect(URL('default','TAinterface'))
+			except:
+				if(submission==None):
+					session.flash = 'All Answer Sheets Checked'
+					redirect(URL(r=request,f='TAinterface'))#'AssignmentPortal','default','TAinterface'))
+				else:
+					session.flash = 'Access Denied'
+					redirect(URL('default','TAinterface'))
+			all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
+			params = {}
+			for para in all_params:
+				temp = para['param']
+				params[temp] = []
+				opts = db((db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
+				for opt in opts:
+					#print 'ops :'+str(opt['opt'])+'-'+str(opt['weight'])
+					params[temp].append(opt['opt']+'('+str(opt['weight'])+')')
+		#	except:
+		#		prob = int(request.vars['problem'][0])
 
 			if request.vars['opt']:
 				try:
 					all_opts = request.vars['opt']
 					comms = request.vars['comments']
-					print all_opts,comms
-
-					db.SubmitReview.assign.default=submission['assign']
-					db.SubmitReview.student.default=submission['student']
-					db.SubmitReview.ta.default=auth.user_id
-					db.SubmitReview.problem.default=prob
-					db.SubmitReview.comments.default=comms
+				#	db.SubmitReview.assign.default=submission['assign']
+				#	db.SubmitReview.student.default=submission['student']
+				#	db.SubmitReview.ta.default=auth.user_id
+				#	db.SubmitReview.problem.default=prob
+				#	db.SubmitReview.comments.default=comms
 					marks = 0
 					for option in all_opts:
 						p = db(db.ProbParam.param == option.split('+')[0]).select(db.ProbParam.id)[0]
 						o = db(db.ParamOption.opt == option.split('+')[1].split('(')[0]).select(db.ParamOption.id)[0]
 						db.SubRevParam.insert(submission=submission['id'],student=submission['student'],param=p)
 						marks += int(option.split('(')[1].split(')')[0])
-					db.SubmitReview.marks.default=marks
+				#	db.SubmitReview.marks.default=marks
+					db.SubmitReview.insert(assign=submission['assign'],student=submission['student'],ta=auth.user.id,problem=prob,comments=comms,marks=marks)
 					session.flash = 'Marks entered succesfully'
 					db(db.Submission.id == submission['id']).update(marked = True)
 					user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.auth_user.email)[0]
