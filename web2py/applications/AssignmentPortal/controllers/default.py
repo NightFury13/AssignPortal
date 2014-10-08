@@ -351,10 +351,11 @@ def checking():
 					db(db.Submission.id == submission['id']).update(marked = True)
 					user = db((db.Submission.id == submission['id']) & (db.Submission.student == db.auth_user.id)).select(db.auth_user.email)[0]
 					os.system('echo "Your submission has been marked, check portal now!" | mail -s SolutionChecked '+ user['email'])
-					redirect(URL(r=request,f='checking?problem=%d' %(prob)))
 
 				except:
 					session.flash = 'Error entering the marks'
+				
+				redirect(URL(r=request,f='checking?problem=%d' %(prob)))
 #			else:
 #				session.flash = 'All solutions checked!'
 #				redirect(URL(r=request,f='TAinterface'))
