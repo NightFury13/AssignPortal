@@ -79,29 +79,26 @@
 	<div class="row">
 	        <div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
 	          <ul class="nav nav-sidebar">
-	            <li class="active"><a href="#search-box">Search</a></li>
-		            <li><a href="#assigned-problems">Assigned Problems</a></li>    	      
+	            <li ><a href="#search-box">Search</a></li>
+		            <li class="active"><a href="#assigned-problems">Assigned Problems</a></li>    	      
         	  </ul>
         	  <ul class="nav nav-sidebar">
         	    <li><a href="{{=URL('default','studentInterface')}}">Access Student Interface</a></li>
          	 </ul>
-  	        </div>
-  	       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    	    	<br/><br/><br/> 
-    	      	<div name='search-box'>
-    	      		<h1 class="page-header">Submission :</h1>
-    	      		<div>
+         	 	<hr>
+         	 		<h4><b>Checking Parameters</b></h4>
     	       			<form method="get" action="{{=URL('default','checking')}}">
 					{{try:}}
 
+					<br/>
 			{{for param in params:}}
-                      
+                     
+						
                       <h4>{{=param}}</h4>
                         {{for opt in params[param]:}}
 			<input type="checkbox"  value={{=param+'+'+opt}} name="opt">{{=opt}}<br/>
                         {{pass}}
-
-            
+                   
 			{{pass}}
                     <h4>Comments :</h4>
                     <input type="textbox" name="comments">
@@ -111,6 +108,15 @@
                   </form>
 			{{except:}}
 			{{pass}}
+					
+
+
+  	        </div>
+  	       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    	    	<br/><br/><br/> 
+    	      	<div name='search-box'>
+    	      		<!--<h1 class="page-header">Submission :</h1>-->
+
                   <div class="col-xs-6 col-sm-3 placeholder">
                   <br/>
                   {{try:}}
