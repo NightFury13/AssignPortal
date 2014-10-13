@@ -88,7 +88,6 @@
   	        </div>
   	  	    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     	    	<br/><br/><br/> 
-<div id="url"></div>
 <button type="button" id="savepdf" onclick="getpdf()">Export as PDF</button>
     	      	<div name='search-box'>
     	      		<h1 class="page-header">Search :</h1>
@@ -170,7 +169,11 @@ function getpdf()
 		contentType: "application/json",
 		url:'html2pdf',//?filename=test.pdf',
 		data:JSON.stringify(data),
-		success: function(data){$("#url").append(data);}
+		success: function(data){
+window.open(
+  "{{=URL('default','download_pdf')}}"+"/"+data,
+  '_blank' // <- This is what makes it open in a new window.
+);}
 	});
 }
 </script>

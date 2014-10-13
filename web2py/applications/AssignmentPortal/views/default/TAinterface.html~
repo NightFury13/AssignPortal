@@ -163,34 +163,13 @@
 
 function getpdf()
 {
-//	var data={ "html": "<html>"+$("html").html().toString()+"</html>", "filename":"test.pdf"};//document.documentElement.outerHTML;
-	var data={ "html": "
-    <html><body>
-    <p>Hello <strong style="color: #f00;">World</strong>
-    <hr>
-    <table border="1" style="background: #eee; padding: 0.5em;">
-        <tr>
-            <td>Amount</td>
-            <td>Description</td>
-            <td>Total</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>Good weather</td>
-            <td>0 EUR</td>
-        </tr>
-        <tr style="font-weight: bold">
-            <td colspan="2" align="right">Sum</td>
-            <td>0 EUR</td>
-        </tr>
-    </table>
-    </body></html>", "filename":"test.pdf"};//document.documentElement.outerHTML;
-//	alert(data);
-//	$("#url").append("ha");
+	var htmldata="<html>"+String($('.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main').html())+"</html>";
+	var data={ "html": htmldata, "filename":"test.pdf"};
 	$.ajax({
 		type:'POST',
+		contentType: "application/json",
 		url:'html2pdf',//?filename=test.pdf',
-		data:"data="+JSON.stringify(data),
+		data:JSON.stringify(data),
 		success: function(data){$("#url").append(data);}
 	});
 }

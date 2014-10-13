@@ -11,8 +11,10 @@
 
 function getpdf()
 {
-	var htmldata="<html>"+String($('#marks').html())+"</html>";
+	do{}while(document.readyState != 'complete');
+	var htmldata="<html><body>"+String($('#marks').html())+"</body></html>";
 	var data={ "html": htmldata, "filename":"test.pdf"};
+	alert(data["html"]);
 	$.ajax({
 		type:'POST',
 		contentType: "application/json",

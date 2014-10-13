@@ -23,12 +23,16 @@ def html2pdf():
 	import gluon.contrib.simplejson
 	newdata = gluon.contrib.simplejson.loads(request.body.read())
 	data=str(newdata["html"])
-	print data
 	filename=str(newdata["filename"])
-	filename=os.path.join(request.folder,'temps/'+filename)
+	original_file=filename
+	filename=os.path.join(request.folder,'uploads/'+filename)
 	pdf=pisa.CreatePDF(cStringIO.StringIO(data),file(filename,"wb"))
-	print pdf.err
-	return filename
+	return original_file
+
+def download_pdf():
+	filename=request.args[0]
+	filename=os.path.join(request.folder,'uploads/'+filename)
+	return response.stream(open(filename,'rb'), chunk_size=10**6)
 
 def temp():
 	return locals()
