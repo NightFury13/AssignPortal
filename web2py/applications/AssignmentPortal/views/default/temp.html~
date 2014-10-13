@@ -1,0 +1,26 @@
+{{extend "layout.html"}}
+<html>
+	<body>
+<div id="url"></div>
+<button type="button" id="savepdf" onclick="getpdf()">Export as PDF</button>
+	<div id="marks">
+		hqweqwfdwfiquehwqiquwdqiuehwehqdibqwduwq
+	</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script>
+
+function getpdf()
+{
+	var htmldata="<html>"+String($('#marks').html())+"</html>";
+	var data={ "html": htmldata, "filename":"test.pdf"};
+	$.ajax({
+		type:'POST',
+		contentType: "application/json",
+		url:'html2pdf',//?filename=test.pdf',
+		data:JSON.stringify(data),
+		success: function(data){$("#url").append(data);}
+	});
+}
+</script>
+</body>
+</html>

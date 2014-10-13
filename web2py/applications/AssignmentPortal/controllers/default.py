@@ -6,14 +6,29 @@ import xml.etree.ElementTree as ET
 import threading
 import datetime
 import time
+# For PDF creation
+import sys,cStringIO
+import xhtml2pdf.pisa as pisa
 from multiprocessing import Process
-
+import json
 def index():
 	msg = request.vars['msg']    
 	if not msg:
 		msg = 'Welcome'
 	response.flash = T(msg)
 	return dict(login_form=auth.login(),message=T('Hello World'))
+
+# For PDF creation
+def html2pdf():
+	import gluon.contrib.simplejson
+	newdata = gluon.contrib.simplejson.loads(request.body.read())
+	data=str(newdata["html"])
+	print data
+	filename=str(newdata["filename"])
+	filename=os.path.join(request.folder,'temps/'+filename)
+	pdf=pisa.CreatePDF(cStringIO.StringIO(data),file(filename,"wb"))
+	print pdf.err
+	return filename
 
 def temp():
 	return locals()
