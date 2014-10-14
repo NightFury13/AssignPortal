@@ -213,6 +213,19 @@ def solutionImageTag():
             redirect(URL(r=request,f='index'))
     return locals()
 
+
+#To Do authentication required
+def get_mark_helper():
+	assign=db(db.Assign.id>0).select(db.Assign.id,db.Assign.name)
+	return locals()
+
+#To Do authentication required
+def get_marks():
+	assign_id=request.vars.assign
+	assign_name=db(db.Assign==assign_id).select(db.Assign.name).first()
+	marks=db((db.SubmitReview.assign==assign_id)&(db.SubmitReview.student==db.auth_user.id)).select(db.auth_user.first_name,db.auth_user.last_name,db.auth_user.email,db.auth_user.rollno,db.SubmitReview.problem,db.SubmitReview.marks)
+	return locals()
+
 @auth.requires_login()
 def TAinterface():
 	if auth.user.usertype == 'TA':

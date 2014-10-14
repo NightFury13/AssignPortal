@@ -1,0 +1,51 @@
+{{extend "layout.html"}}
+<html>
+	<body>
+<button type="button" id="savepdf" onclick="getpdf()">Export as PDF</button>
+	<div id="marks">
+		<h2>{{=assign_name["name"]}}</h2>
+		<table>
+			<tr>
+				<th>Roll Number</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Email ID</th>
+				<th>Problem No.</th>
+				<th>Marks</th>
+			</tr>
+			{{for i in marks:}}
+			<tr>
+				<td>{{=i["auth_user.rollno"]}}</td>
+				<td>{{=i["auth_user.first_name"]}}</td>
+				<td>{{=i["auth_user.last_name"]}}</td>
+				<td>{{=i["auth_user.email"]}}</td>
+				<td>{{=i["SubmitReview.problem"]}}</td>
+				<td>{{=i["SubmitReview.marks"]}}</td>
+			</tr>
+			{{pass}}
+		</table>
+		
+	</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script>
+
+function getpdf()
+{
+	do{}while(document.readyState != 'complete');
+	var htmldata="<html><body>"+String($('#marks').html())+"</body></html>";
+	var data={ "html": htmldata, "filename":"test.pdf"};
+	$.ajax({
+		type:'POST',
+		contentType: "application/json",
+		url:'html2pdf',
+		data:JSON.stringify(data),
+		success: function(data){window.open(
+  "{{=URL('default','download_pdf')}}"+"/"+data,
+  '_blank' // <- This is what makes it open in a new window.
+);}
+	});
+}
+	
+</script>
+</body>
+</html>

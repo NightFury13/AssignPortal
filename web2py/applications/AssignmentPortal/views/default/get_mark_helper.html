@@ -1,0 +1,10 @@
+{{extend "layout.html"}}
+<form action={{=URL('default','get_marks')}} method="post">
+	Assignment Name:
+	<select name="assign">
+		{{for i in assign:}}
+		<option value={{=i['id']}}>{{=i['name']}}</option>
+		{{pass}}
+	</select><br/>
+	<input type="submit" value="Get Assignment Marks"/>
+</form>
