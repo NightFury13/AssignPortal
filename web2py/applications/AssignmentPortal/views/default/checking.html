@@ -35,6 +35,22 @@
      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
      z-index: 2000;
      }
+     div.img {
+    margin: 5px;
+    padding-left: 18%;
+    padding-top: 4%;
+    height: auto;
+    width: auto;
+    float: left;
+    text-align: center;
+}
+
+div.img img {
+    display: inline;
+
+    
+}
+     
     </style>
 
     	{{
@@ -109,29 +125,20 @@
 
 
   	        </div>
-  	       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    	    	<br/><br/><br/> 
-    	      	<div name='search-box'>
-    	      		<!--<h1 class="page-header">Submission :</h1>-->
+  	       
+            </div>
+  </div>
 
-                  <div class="col-xs-6 col-sm-3 placeholder">
-                  <br/>
                   {{try:}}
-                    <div id='search-result'>
+                    <div class="img">
 		                {{if submission:}}
-			                 <img src="{{=URL('download',args=submission['image'])}}" width=500px />
+                       <img src="{{=URL('download',args=submission['image'])}}" width=500px />
 			                 <br/>
 			                 <br/>
 		                {{pass}}
                     </div>
                   {{except:}}
                     {{pass}}
-			 	 		      </div>
-			  		    </div>
-			 	      </div>
-            </div>
-  </div>
-</div>
 <!-- The javascript =============================================
        (Placed at the end of the document so the pages load faster) -->
   <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
