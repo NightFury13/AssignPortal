@@ -79,10 +79,10 @@
 	<div class="row">
 	        <div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
 	          <ul class="nav nav-sidebar">
-	            <li class="active"><a href="#search-box">Search</a></li>
-		              	      
+	            <li class="active"><a href="{{=URL('default','facultyInterface')}}">Faculty Interface</a></li>         	      
         	  </ul>
         	  <ul class="nav nav-sidebar">
+        	  	<li><a href="{{=URL('default','get_mark_helper')}}">See Assignment Marks</a></li>
         	    <li><a href="{{=URL('default','autoAssignment')}}">Upload Assignment</a></li>
          	 </ul>
   	        </div>
@@ -141,10 +141,13 @@
         	 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     	    	
     	      	<div name='assign'>
+    	      		{{try:}}
+    	      		{{if not assign:}}
     	      		<h1 class="page-header">Assignments :</h1>
+    	      		{{pass}}
     	      		<div class="row placeholders">
     	       			<div class="col-xs-6 col-sm-3 placeholder">
-							{{try:}}
+							
 	{{facData}}
 	{{except:}}
 	{{facData=allfacData}}
@@ -159,6 +162,7 @@
 				<h4>{{=row['Course']['name']}} - {{=row['Course']['code']}}</h4>
 				<ul>
 			{{pass}}
+			<br/>
 			<li> <a href="{{=URL('AssignmentPortal','default','facultyInterface')}}?assign={{=row['Assign']['id']}}">{{=row['Assign']['name']}}</a> </li>
 		{{pass}}
 		</ul>
