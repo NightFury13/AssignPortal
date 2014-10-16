@@ -68,7 +68,12 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            {{if auth.user.usertype == 'TA':}}
             <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Profile</a></li>
+            {{pass}}
+            {{if auth.user.usertype == 'Faculty':}}
+            <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','facultyInterface')}}">Profile</a></li>
+            {{pass}}
             <li><a href="{{=URL('default', 'user', args='logout')}}">Logout</a></li>
           </ul>
           
@@ -79,11 +84,18 @@
 	<div class="row">
 	        <div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
 	         <ul class="nav nav-sidebar">
-              <li><a href="{{=URL('default','TAinterface')}}">TA Interface</a></li>          
+              {{if auth.user.usertype == 'TA':}}
+              <li><a href="{{=URL('default','TAinterface')}}">TA Interface</a></li>   
+              <li><a href="{{=URL('default','studentInterface')}}">Access Student Interface</a></li>       
+              {{pass}}
+              {{if auth.user.usertype == 'Faculty':}}
+               <li><a href="{{=URL('default','facultyInterface')}}">Faculty Interface</a></li>   
+              {{pass}}
             </ul>
         	  <ul class="nav nav-sidebar">
-        	    <li><a href="{{=URL('default','studentInterface')}}">Access Student Interface</a></li>
+        	    
         	    <li class="active"><a href="{{=URL('default','get_mark_helper')}}">See Assignment Marks</a></li>
+              <li ><a href="{{=URL('default','autoAssignment')}}">Upload Assignment</a></li> 
          	 </ul>
   	        </div>
   	
