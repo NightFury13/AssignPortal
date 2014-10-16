@@ -108,9 +108,11 @@ div.img img {
                      
 						
                       <h4>{{=param}}</h4>
-                        {{for opt in params[param]:}}
-			<input type="checkbox"  value={{=param+'+'+opt}} name="opt">{{=opt}}<br/>
-                        {{pass}}
+		      {{for opt in params[param]:}}
+		      <label>
+			<input type="radio"  value={{=param+'+'+opt}} name={{=param}}>{{=opt}}
+		</label><br/>
+			{{pass}}
                    
 			{{pass}}
                     <h4>Comments :</h4>

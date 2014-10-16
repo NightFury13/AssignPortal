@@ -362,9 +362,15 @@ def checking():
 		#	except:
 		#		prob = int(request.vars['problem'][0])
 
-			if request.vars['opt']:
+			if len(request.vars)>1:#for case where we get more parameters like comment/neatness etc with problem id
 				try:
-					all_opts = request.vars['opt']
+					all_opt=dict(request.vars)
+					del all_opt['comments']
+					del all_opt['problem']
+					all_opts=[]
+					for i in all_opt:
+						all_opts.append(all_opt[i])
+					#all_opts = request.vars['opt']
 					comms = request.vars['comments']
 				#	db.SubmitReview.assign.default=submission['assign']
 				#	db.SubmitReview.student.default=submission['student']
