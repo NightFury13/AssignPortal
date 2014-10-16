@@ -78,9 +78,13 @@
     	<div class="container-fluid"> 
 			<div class="row">
 	        	<div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
+	        	 {{if auth.user.usertype == 'TA':}}
 	        	  <ul class="nav nav-sidebar">
-	        	    <li class="active"><a href="#search-box">Submissions</a></li>
-		               	      
+	        	    <li><a href="{{=URL('default','TAinterface')}}">TA Interface</a></li>       	      
+        	  	  </ul>
+        	  	 {{pass}}
+	        	  <ul class="nav nav-sidebar">
+	        	    <li class="active"><a href="{{=URL('default','studentInterface')}}">Student Interface</a></li>       	      
         	  	  </ul>
         	  	  <ul class="nav nav-sidebar">
         	    	<li><a href="{{=URL('default','studupload')}}">Upload a solution</a></li>
@@ -91,7 +95,7 @@
   	  	    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     	    		<br/><br/><br/> 
     	      		<div name='search-box'>
-    	      			<h1 class="page-header">Search :</h1>
+    	      			<h2 class="page-header">Search :</h2>
     	      			<div class="row placeholders">
     	       				<div class="col-xs-6 col-sm-3 placeholder">
 							     	<h4>Take a look at your submissions :</h4> 
