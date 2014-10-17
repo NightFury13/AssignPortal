@@ -357,7 +357,6 @@ def checking():
 				params[temp] = []
 				opts = db((db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
 				for opt in opts:
-					#print 'ops :'+str(opt['opt'])+'-'+str(opt['weight'])
 					params[temp].append(opt['opt']+'('+str(opt['weight'])+')')
 		#	except:
 		#		prob = int(request.vars['problem'][0])
@@ -483,10 +482,10 @@ def studentInterface():
 		
 		course = db((db.Assign.id == assign) &(db.Assign.course == db.Course.id)).select(db.Course.id).first()
 		status = db((db.Submission.student == auth.user.id) & (db.Submission.assign == assign) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
-		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)	
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.course == course) & (db.Submission.assign ==assign) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)	
 		problems = db((db.Problem.assign == assign) & (db.Problem.assign == db.Assign.id)).select(db.Problem.question,db.Assign.name, orderby = db.Assign.id)
 	else:	
-		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,orderby = db.Submission.id)
+		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
 		status = db((db.Submission.student == auth.user.id) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
 	
 	assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
