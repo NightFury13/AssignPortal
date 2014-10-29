@@ -34,8 +34,10 @@ def download_pdf():
 	filename=os.path.join(request.folder,'uploads/'+filename)
 	return response.stream(open(filename,'rb'), chunk_size=10**6)
 
-def temp():
+def student_home():
+	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id)
 	return locals()
+
 
 def autoAssignment():
 	form = SQLFORM(db.AutoAssign)
@@ -487,6 +489,8 @@ def studentInterface():
 	else:	
 		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
 		status = db((db.Submission.student == auth.user.id) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
+		print status
+		print userData
 	
 	assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
         return locals()
