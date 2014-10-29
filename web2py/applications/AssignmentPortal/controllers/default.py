@@ -35,7 +35,7 @@ def download_pdf():
 	return response.stream(open(filename,'rb'), chunk_size=10**6)
 
 def student_home():
-	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id)
+	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
 	return locals()
 
 
@@ -302,6 +302,12 @@ def studupload():
 			form.vars.assign = assign_course['id']
 			form.vars.course = assign_course['course']
 			
+			#test code
+			#check if causing problems with multi assignment(wrote the two lines for studen_Home submit now refirection)
+			if request.vars.problem:
+				form.vars.problem=request.vars.problem
+			#test code ends
+
 			if form.process().accepted:
 				problem_end_time= problems[0].end_time
 				current_time = datetime.datetime.now()
@@ -489,8 +495,6 @@ def studentInterface():
 	else:	
 		userData = db((db.SubmitReview.student == auth.user.id) & (db.Submission.student == auth.user.id) & (db.Submission.problem == db.SubmitReview.problem)).select(db.SubmitReview.ALL,db.Submission.image,db.Submission.id,orderby = db.Submission.id)
 		status = db((db.Submission.student == auth.user.id) & (db.Submission.problem == db.Problem.id)).select(db.Submission.id, db.Problem.question, orderby = db.Submission.id)
-		print status
-		print userData
 	
 	assignments= db((db.StudCourse.student == auth.user.id) & (db.StudCourse.course==db.Course.id)&(db.Course.id==db.Assign.course)).select(db.Assign.name,db.Course.name,db.Assign.id)        
         return locals()

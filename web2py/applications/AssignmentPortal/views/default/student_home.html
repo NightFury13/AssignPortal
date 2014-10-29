@@ -111,12 +111,22 @@
 		<tr>
 		        <td>{{=i['Course']['name']}}</td>
 			<td>{{=i['Assign']['name']}}</td>
-			<td>{{=i['Assign']['end_time']}}</td>
+			<td>{{=i['Assign']['end_time']}}<br/>
+				{{import datetime,time}}
+				{{current_time = datetime.datetime.now()}}
+			{{diff_af_time=(time.mktime(i['Assign']['end_time'].timetuple()) - time.mktime(current_time.timetuple()))}}
+			{{diff_af_time}}
+			{{if diff_af_time<0:}}
+			Deadline Passed
+			{{pass}}
+		</td>
 			<td>{{=i['Problem']['num']}}</td>
 			<td>
 			        {{x=db((db.Submission.student==auth.user.id)&(db.Submission.problem==i['Problem']['id'])).select().first()}}
 			        {{if not x:}}
-			        Not Submited
+				Not Submited<br/>
+				<!-- Remove problem=%s incase error with multiple assingments (See studupload controller as well) -->
+				<a href={{=URL('default','studupload?assign=%s&problem=%s' % (i['Assign']['id'] , i['Problem']['id']))}}>Sumbit Now</a>
 			        {{else:}}
 			        {{x=db((db.SubmitReview.student==auth.user.id)&(db.SubmitReview.problem==i['Problem']['id'])).select().first()}}
 			        {{if not x:}}
