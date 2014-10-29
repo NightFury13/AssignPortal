@@ -15,6 +15,21 @@
     <!-- Custom styles for this template -->
     	<link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
     	<style>
+
+    	.img-zoom {
+    width: 310px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+}
+ 
+.transition {
+    -webkit-transform: scale(2); 
+    -moz-transform: scale(2);
+    -o-transform: scale(2);
+    transform: scale(2);
+}
       div.flash {
      font-weight: bold;
      position: fixed;
@@ -64,6 +79,7 @@ div.img img {
   		response.include_meta()
 		
   		}}
+  		
   	
 	</head>
 
@@ -134,7 +150,7 @@ div.img img {
                   {{try:}}
                     <div class="img">
 		                {{if submission:}}
-                       <img src="{{=URL('download',args=submission['image'])}}" width=500px />
+                       <img class="img-zoom" src="{{=URL('download',args=submission['image'])}}"  />
 			                 <br/>
 			                 <br/>
 		                {{pass}}
@@ -143,6 +159,16 @@ div.img img {
                     {{pass}}
 <!-- The javascript =============================================
        (Placed at the end of the document so the pages load faster) -->
+       <script>
+  $(document).ready(function(){
+    $('.img-zoom').hover(function() {
+        $(this).addClass('transition');
+ 
+    }, function() {
+        $(this).removeClass('transition');
+    });
+  });
+</script>
   <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
   <script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
   <!--[if lt IE 7 ]>
