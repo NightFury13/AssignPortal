@@ -80,20 +80,7 @@ div.img img {
 				font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 				z-index: 2000;
 			}
-		th.headerSortUp { 
-			background-image: url({{=URL('static','images/asc.gif')}}); 
-			background-repeat: no-repeat;
-			background-color: #3399FF;
-			background-position:right;
-
-		} 
-			th.headerSortDown { 
-			background-image: url({{=URL('static','images/desc.gif')}}); 
-			background-repeat: no-repeat;
-				        background-color: #3399FF; 
-			background-position:right;
-					} 
-		</style>
+	</style>
 
 		{{
 		response.files.insert(0,URL('static','css/web2py.css'))
@@ -106,26 +93,6 @@ div.img img {
 		response.include_meta()
 
 		}}
-		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
-		<script src="{{=URL('static','js/jquery.tablesorter.js')}}"></script>i
-		<script type="text/javascript"> 
-			$.tablesorter.addParser({
-				    id: "date",
-			        is: function (s) {
-		            return false;
-	        },
-    format: function (s, table) {
-        var date = (s + '').match(/(\d{1,2}\s+\w{3}\s+\d{4}),(\s+\d{1,2}:\d{1,2}:\d{1,2}\s+[AP]M)/);
-            return date ? new Date(date[1] + date[2]).getTime() || s : s;
-        },
-    type: "numeric"
-    });    
-			$(document).ready(function() 
-			{ 
-			$("#myTable").tablesorter({sortList: [[0,0]]}); 
-				}); </script>
-		
-
 	</head>
 
 	<body>
@@ -175,14 +142,14 @@ div.img img {
 					<div id="submission">
 						{{sub = db(db.Submission.id == subid).select().first()}}
 						{{rev=db(db.SubmitReview.id==revid).select().first()}}
-						<div style="float:right">
-							<p>Marks : {{=rev['marks']}}<br/>
-							Comments : {{=rev['comments']}}</p><br/>
-						</div>
-						<div class= "img" style="padding-left:18%;">
-						 <span class='zoom' id='ex3'>
+						<pre style="font-size:18px"><div style="padding-left:36%;">
+   Marks : {{=rev['marks']}}
+Comments : {{=rev['comments']}}
+						</div></pre>
+						<div class= "img">
+			<span class='zoom' id='ex3'>
                         	<p>Click to zoom</p>
-                       		<img src="{{=URL('download',args=sub['image'])}}" width=40%/>
+                       		<img src="{{=URL('download',args=sub['image'])}}" width=500px/>
                        
                       	 </span>
 						</div>
@@ -194,20 +161,7 @@ div.img img {
 		<!-- The javascript =============================================
 		(Placed at the end of the document so the pages load faster) -->
 
-		<script>
-			 $("#search").keyup(function(){
-				         _this = this;
-					         // Show only matching TR, hide rest of them
-						         $.each($("#myTable tbody").find("tr"), function() {
-							             console.log($(this).text());
-								                 if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) == -1)
-										                $(this).hide();
-												            else
-													                     $(this).show();                
-															             });
-																         }); 
-		</script>
-		<script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
+	<script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
 
 				<script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
 				<!--[if lt IE 7 ]>

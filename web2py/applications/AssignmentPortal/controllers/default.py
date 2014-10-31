@@ -368,7 +368,6 @@ def checking():
 					session.flash = 'Access Denied'
 					redirect(URL('default','TAinterface'))
 			all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
-			print all_params
 			params = {}
 			for para in all_params:
 				temp = para['param']

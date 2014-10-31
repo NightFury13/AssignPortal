@@ -36,19 +36,19 @@
 				font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 				z-index: 2000;
 			}
-		th.headerSortUp { 
-			background-image: url({{=URL('static','images/asc.gif')}}); 
-			background-repeat: no-repeat;
-			background-color: #3399FF;
-			background-position:right;
+			th.headerSortUp { 
+				background-image: url({{=URL('static','images/asc.gif')}}); 
+				background-repeat: no-repeat;
+				background-color: #3399FF;
+				background-position:right;
 
-		} 
+			} 
 			th.headerSortDown { 
-			background-image: url({{=URL('static','images/desc.gif')}}); 
-			background-repeat: no-repeat;
-				        background-color: #3399FF; 
-			background-position:right;
-					} 
+				background-image: url({{=URL('static','images/desc.gif')}}); 
+				background-repeat: no-repeat;
+				background-color: #3399FF; 
+				background-position:right;
+			} 
 		</style>
 
 		{{
@@ -66,137 +66,157 @@
 		<script src="{{=URL('static','js/jquery.tablesorter.js')}}"></script>i
 		<script type="text/javascript"> 
 			$.tablesorter.addParser({
-				    id: "date",
-			        is: function (s) {
-		            return false;
-	        },
-    format: function (s, table) {
-        var date = (s + '').match(/(\d{1,2}\s+\w{3}\s+\d{4}),(\s+\d{1,2}:\d{1,2}:\d{1,2}\s+[AP]M)/);
-            return date ? new Date(date[1] + date[2]).getTime() || s : s;
-        },
-    type: "numeric"
-    });    
-			$(document).ready(function() 
-			{ 
-			$("#myTable").tablesorter({sortList: [[0,0]]}); 
-				}); </script>
-		
+id: "date",
+is: function (s) {
+return false;
+},
+format: function (s, table) {
+var date = (s + '').match(/(\d{1,2}\s+\w{3}\s+\d{4}),(\s+\d{1,2}:\d{1,2}:\d{1,2}\s+[AP]M)/);
+return date ? new Date(date[1] + date[2]).getTime() || s : s;
+},
+type: "numeric"
+});    
+$(document).ready(function() 
+		{ 
+		$("#myTable").tablesorter({sortList: [[0,0]]}); 
+		}); </script>
 
-	</head>
 
-	<body>
-		{{if response.flash:}}
-		<div class="flash">{{=response.flash or ''}}</div>
-		{{pass}}
-		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="{{=URL('default','index')}}">Shiksha</a>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav navbar-right">
-						
-						<li><a href="{{=URL('default', 'user', args='logout')}}">Logout</a></li>
-					</ul>
-				</div>
+</head>
+
+<body>
+	{{if response.flash:}}
+	<div class="flash">{{=response.flash or ''}}</div>
+	{{pass}}
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="{{=URL('default','index')}}">Shiksha</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+
+					<li><a href="{{=URL('default', 'user', args='logout')}}">Logout</a></li>
+				</ul>
 			</div>
 		</div>
-		<div class="container-fluid"> 
-			<div class="row">
-				<div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
-					{{if auth.user.usertype == 'TA':}}
-					<ul class="nav nav-sidebar">
-						<li><a href="{{=URL('default','TAinterface')}}">TA View</a></li>       	      
-					</ul>
-					{{pass}}
-					<ul class="nav nav-sidebar">
-						<li><a href="{{=URL('default','student_home')}}">Student View</a></li>       	      
-					</ul>
-					<ul class="nav nav-sidebar">
-						<li><a href="{{=URL('default','studupload')}}">Submit Solution</a></li>
-						<li><a href="{{=URL('default','registerCourse')}}">Register for a Course</a></li>
-						<li><a href="{{=URL('default','assignstatus')}}">Assignments</a></li>
-						<li class="active"><a href="{{=URL('default','see_marks')}}">Marks</a></li>
-						<li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','student_home')}}">Settings</a></li>
-					</ul>
-				</div>
-				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-					<br/><br/><br/>
-				         <input type="text" id="search" placeholder="Type to search..." /><br/><br/>
+	</div>
+	<div class="container-fluid"> 
+		<div class="row">
+			<div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
+				{{if auth.user.usertype == 'TA':}}
+				<ul class="nav nav-sidebar">
+					<li><a href="{{=URL('default','TAinterface')}}">TA View</a></li>       	      
+				</ul>
+				{{pass}}
+				<ul class="nav nav-sidebar">
+					<li><a href="{{=URL('default','student_home')}}">Student View</a></li>       	      
+				</ul>
+				<ul class="nav nav-sidebar">
+					<li><a href="{{=URL('default','studupload')}}">Submit Solution</a></li>
+					<li><a href="{{=URL('default','registerCourse')}}">Register for a Course</a></li>
+					<li><a href="{{=URL('default','assignstatus')}}">Assignments</a></li>
+					<li class="active"><a href="{{=URL('default','see_marks')}}">Marks</a></li>
+					<li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','student_home')}}">Settings</a></li>
+				</ul>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<br/><br/><br/>
+				<input type="text" id="search" placeholder="Type to search..." /><br/><br/>
+				<button type="button" id="savepdf" onclick="getpdf()">Export as PDF</button><br/>
 				<!--	<div id='search-result'>
 					<div class="table-responsive">-->                                                                
-							<table id="myTable" class="tablesorter table table-striped">
-								<thead>
-									<tr>
-										<th>Course Name</th>
-										<th>Assignment Name</th>
-										<th>Problem Number</th>
-										<th>Status</th>
-									</tr>
-								</thead>
-								<tbody>
-									{{for i in stud_data:}}
-									{{x=db((db.SubmitReview.student==auth.user.id)&(db.SubmitReview.problem==i['Problem']['id'])).select().first()}}
-										{{if x:}}	
-										<tr>
-											<td>{{=i['Course']['name']}}</td>
-											<td>{{=i['Assign']['name']}}</td>
-											<td>{{=i['Problem']['num']}}</td>
-											<td>
-												Marks: {{=x['marks']}}<br/>
-												Comments: {{=x['comments']}}
-												{{subid=db((db.Submission.student==auth.user.id)&(db.Submission.problem==i['Problem']['id'])).select(db.Submission.id).first()}} <br/>
-												<a href={{=URL('default','see_submission?subid=%s&revid=%s' % (subid.id, x.id))}}>View Submission</a>
-											</td>
-										</tr>
-										{{pass}}
-									{{pass}}
-								</tbody>
-							</table>
-					<!--	</div>
-			</div>-->
+						<table id="myTable" class="tablesorter table table-striped">
+							<thead>
+								<tr>
+									<th>Course Name</th>
+									<th>Assignment Name</th>
+									<th>Problem Number</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{for i in stud_data:}}
+								{{x=db((db.SubmitReview.student==auth.user.id)&(db.SubmitReview.problem==i['Problem']['id'])).select().first()}}
+								{{if x:}}	
+								<tr>
+									<td>{{=i['Course']['name']}}</td>
+									<td>{{=i['Assign']['name']}}</td>
+									<td>{{=i['Problem']['num']}}</td>
+									<td>
+										Marks: {{=x['marks']}}<br/>
+										Comments: {{=x['comments']}}
+										{{subid=db((db.Submission.student==auth.user.id)&(db.Submission.problem==i['Problem']['id'])).select(db.Submission.id).first()}} <br/>
+										<a href={{=URL('default','see_submission?subid=%s&revid=%s' % (subid.id, x.id))}}>View Submission</a>
+									</td>
+								</tr>
+								{{pass}}
+								{{pass}}
+							</tbody>
+						</table>
+						<!--	</div>
+				</div>-->
 
-				</div>
 			</div>
-		</div>	
-		<!-- The javascript =============================================
-		(Placed at the end of the document so the pages load faster) -->
+		</div>
+	</div>	
+	<!-- The javascript =============================================
+	(Placed at the end of the document so the pages load faster) -->
+	<script>
 
-		<script>
-			 $("#search").keyup(function(){
-				         _this = this;
-					         // Show only matching TR, hide rest of them
-						         $.each($("#myTable tbody").find("tr"), function() {
-							             console.log($(this).text());
-								                 if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) == -1)
-										                $(this).hide();
-												            else
-													                     $(this).show();                
-															             });
-																         }); 
-		</script>
-		<script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
+		function getpdf()
+		{
+			var htmldata="<html>"+String($('.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main').html())+"</html>";
+			var data={ "html": htmldata, "filename":"{{=auth.user.username}}.pdf"};
+			$.ajax({
+				type:'POST',
+				contentType: "application/json",
+				url:'html2pdf',//?filename=test.pdf',
+				data:JSON.stringify(data),
+				success: function(data){
+					window.open(
+					"{{=URL('default','download_pdf')}}"+"/"+data,
+					'_blank' // <- This is what makes it open in a new window.
+					);}
+			});
+		}
+	</script>
 
-				<script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
-				<!--[if lt IE 7 ]>
-				<script src="{{=URL('static','js/dd_belatedpng.js')}}"></script>
-				<script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
-				<![endif]-->
+	<script>
+		$("#search").keyup(function(){
+			_this = this;
+			// Show only matching TR, hide rest of them
+			$.each($("#myTable tbody").find("tr"), function() {
+				console.log($(this).text());
+				if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) == -1)
+				$(this).hide();
+				else
+				$(this).show();                
+			});
+		}); 
+	</script>
+	<script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
 
-				{{if response.google_analytics_id:}}
-				<script src="{{=URL('static','js/analytics.min.js')}}"></script>
-				<script type="text/javascript">
-					analytics.initialize({
-							'Google Analytics':{trackingId:'{{=response.google_analytics_id}}'} 
-							});</script>
-						{{pass}}
-						<script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
+	<script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
+	<!--[if lt IE 7 ]>
+	<script src="{{=URL('static','js/dd_belatedpng.js')}}"></script>
+	<script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
+	<![endif]-->
 
-					</body>
-				</html>
+	{{if response.google_analytics_id:}}
+	<script src="{{=URL('static','js/analytics.min.js')}}"></script>
+	<script type="text/javascript">
+		analytics.initialize({
+				'Google Analytics':{trackingId:'{{=response.google_analytics_id}}'} 
+				});</script>
+			{{pass}}
+			<script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
+
+		</body>
+	</html>

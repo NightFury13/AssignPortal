@@ -128,7 +128,8 @@
 				</div>
 				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 					<br/><br/><br/>
-				         <input type="text" id="search" placeholder="Type to search..." /><br/><br/>
+					<input type="text" id="search" placeholder="Type to search..." /><br/><br/>
+					   <button type="button" id="savepdf" onclick="getpdf()">Export as PDF</button><br/>
 				<!--	<div id='search-result'>
 					<div class="table-responsive">-->                                                                
 							<table id="myTable" class="tablesorter table table-striped">
@@ -185,6 +186,25 @@
 		</div>	
 		<!-- The javascript =============================================
 		(Placed at the end of the document so the pages load faster) -->
+ <script>
+
+	 function getpdf()
+	 {
+		         var htmldata="<html>"+String($('.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main').html())+"</html>";
+			         var data={ "html": htmldata, "filename":"{{=auth.user.username}}.pdf"};
+				         $.ajax({
+						                 type:'POST',
+								                 contentType: "application/json",
+										                 url:'html2pdf',//?filename=test.pdf',
+												                 data:JSON.stringify(data),
+														                 success: function(data){
+																	 window.open(
+																	   "{{=URL('default','download_pdf')}}"+"/"+data,
+																	     '_blank' // <- This is what makes it open in a new window.
+																	     );}
+																	             });
+																		     }
+																	     </script>
 
 		<script>
 			 $("#search").keyup(function(){
