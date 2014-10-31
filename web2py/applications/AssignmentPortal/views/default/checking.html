@@ -110,7 +110,7 @@ div.img img {
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Profile</a></li>
+            
             <li><a href="{{=URL('default', 'user', args='logout')}}">Logout</a></li>
           </ul>
           
@@ -123,6 +123,7 @@ div.img img {
 	          <ul class="nav nav-sidebar">
               <li><a href="{{=URL('default','TAinterface')}}">TA interface</a></li>                	  
         	    <li><a href="{{=URL('default','studentInterface')}}">Access Student Interface</a></li>
+              <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Settings</a></li>
          	 </ul>
          	 	<hr>
          	 		<h4><b>Checking Parameters</b></h4>

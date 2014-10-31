@@ -67,7 +67,6 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Profile</a></li>
             <li><a href="{{=URL('default', 'user', args='logout')}}">Logout</a></li>
           </ul>
           
@@ -79,7 +78,7 @@
 	<div class="row">
 	        <div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
 	          <ul class="nav nav-sidebar">
-              <li ><a href="{{=URL('default','adminInterface')}}">Assign Faculty/TA</a></li> 
+              <li ><a href="{{=URL('default','adminInterface')}}">Assign Faculty/TA</a></li>
                <li class="active"><a href="{{=URL('default','addCourse')}}">Add a Course</a></li> 
 	               	      
         	  </ul>
@@ -89,7 +88,8 @@
         	   
          	 </ul>
         	  <ul class="nav nav-sidebar">
-             <li><a href="http://127.0.0.1:8000/AssignmentPortal/appadmin">Access the Database</a></li>
+             <li><a href="http://127.0.0.1:8000/AssignmentPortal/appadmin">Access the Database (to be removed)</a></li>
+             <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Settings</a></li>
          	 </ul>
   	        </div>
   	         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

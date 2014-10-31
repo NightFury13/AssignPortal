@@ -68,7 +68,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Profile</a></li>
+            
             <li><a href="{{=URL('default', 'user', args='logout')}}">Logout</a></li>
           </ul>
           
@@ -81,9 +81,11 @@
 	          <ul class="nav nav-sidebar">
 				{{if auth.user.usertype == 'TA':}}
 			  	<li><a href="{{=URL('default','TAinterface')}}">TA Interface</a></li>
+          <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Settings</a></li>
 				{{pass}}
 				{{if auth.user.usertype == 'Faculty':}}
 			  	<li><a href="{{=URL('default','facultyInterface')}}">Faculty Interface</a></li>
+          <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','facultyInterface')}}">Settings</a></li>
 				{{pass}}
         	  </ul>
         	  <ul class="nav nav-sidebar">

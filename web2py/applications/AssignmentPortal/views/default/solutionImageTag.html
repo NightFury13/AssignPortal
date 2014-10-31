@@ -110,7 +110,7 @@ div.img img {
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Profile</a></li>
+            
             <li><a href="{{=URL('default', 'user', args='logout')}}">Logout</a></li>
           </ul>
           
@@ -133,6 +133,7 @@ div.img img {
          	 </ul>
         	  <ul class="nav nav-sidebar">
              <li><a href="http://127.0.0.1:8000/AssignmentPortal/appadmin">Access the Database</a></li>
+             <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','adminInterface')}}">Settings</a></li>
          	 </ul>
   	        </div>
   	         
