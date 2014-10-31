@@ -14,8 +14,6 @@
 
     <!-- Custom styles for this template -->
     	<link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
-      <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
-      <script src="{{=URL('static','js/jquery.zoom.js')}}"></script>
     	<style>
         .zoom {
       display:inline-block;
@@ -31,7 +29,7 @@
       position:absolute; 
       top:0;
       right:0;
-      background:url(icon.png);
+      background:{{URL('static','images/icon.png')}};
     }
 
     .zoom img {
@@ -40,8 +38,6 @@
 
     .zoom img::selection { background-color: transparent; }
 
-    #ex2 img:hover { cursor: url(grab.cur), default; }
-    #ex2 img:active { cursor: url(grabbed.cur), default; }
     
       div.flash {
      font-weight: bold;
@@ -63,21 +59,7 @@
      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
      z-index: 2000;
      }
-     div.img {
-    margin: 5px;
-    padding-left: 18%;
-    padding-top: 4%;
-    height: auto;
-    width: auto;
-    float: left;
-    text-align: center;
-}
 
-div.img img {
-    display: inline;
-
-    
-}
      
     </style>
 
@@ -93,7 +75,13 @@ div.img img {
 		
   		}}
   		
-  	
+      <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+      <script src="{{=URL('static','js/jquery.zoom.js')}}"></script>
+        <script>
+    $(document).ready(function(){
+      $('#ex1').zoom({ on:'click' });      
+    });
+  </script> 	
 	</head>
 
 	<body>	
@@ -161,28 +149,19 @@ div.img img {
   </div>
 
                   {{try:}}
-                    <div class="img">
 		                {{if submission:}}
-                      <span class='zoom' id='ex3'>
-                       <img src="{{=URL('download',args=submission['image'])}}"  />
+                      <span class='zoom' id='ex1'>
+                       <img style="width:60%;padding-top:4%;padding-left:18%" src="{{=URL('download',args=submission['image'])}}"  />
                        <p>Click to zoom</p>
                       </span>
 			                 <br/>
 			                 <br/>
 		                {{pass}}
-                    </div>
                   {{except:}}
                     {{pass}}
 <!-- The javascript =============================================
        (Placed at the end of the document so the pages load faster) -->
-       <script>
-    $(document).ready(function(){
-      $('#ex1').zoom();
-      $('#ex2').zoom({ on:'grab' });
-      $('#ex3').zoom({ on:'click' });      
-      $('#ex4').zoom({ on:'toggle' });
-    });
-  </script>
+
   
   <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
   <script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
