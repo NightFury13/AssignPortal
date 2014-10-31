@@ -284,10 +284,10 @@ def studupload():
 				diff_as_time= (time.mktime(current_time.timetuple()) - time.mktime(assign_deadline['start_time'].timetuple()))
 				if(diff_as_time<0):
 					session.flash =T("Assignment Submission Not Yet Started")
-					redirect(URL('default','studentInterface'))
+					redirect(URL('default','student_home'))
 				elif(diff_af_time<0):
 					session.flash =T("Assignment Deadline Passed")
-					redirect(URL('default','studentInterface'))
+					redirect(URL('default','student_home'))
 			else:
 				prob_no=request.vars.problem
 				assign_no=db(db.Problem.id==prob_no).select(db.Problem.assign).first()['assign']
@@ -323,7 +323,7 @@ def studupload():
 				diff_time= (time.mktime(problem_end_time.timetuple()) - time.mktime(current_time.timetuple()))
 				if diff_time<0:
 					session.flash =T("Assignment Deadline Passed")
-					redirect(URL('default','studentInterface'))
+					redirect(URL('default','student_home'))
 
 				already_submitted= db((db.Submission.problem == form.vars.problem)&(db.Submission.student == form.vars.student)).select()
 				stream = open(os.path.join(request.folder,'uploads',form.vars.image),'rb')
@@ -338,7 +338,7 @@ def studupload():
 					.update(image=db.Submission.image.store(stream,form.vars.image),answer=form.vars.answer,marked=form.vars.marked)
 				stream.close()
 				session.flash =T("Assignment Uploaded Succesfully")
-				redirect(URL('default','studentInterface'))
+				redirect(URL('default','student_home'))
 			elif form.errors:
 				response.flash = 'form has errors'
 	

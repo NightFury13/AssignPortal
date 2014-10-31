@@ -80,19 +80,19 @@
 	        <div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
 	          <ul class="nav nav-sidebar">
 				{{if auth.user.usertype == 'TA':}}
-			  	<li><a href="{{=URL('default','TAinterface')}}">TA Interface</a></li>
+			  	<li><a href="{{=URL('default','TAinterface')}}">TA View</a></li>
           <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','TAinterface')}}">Settings</a></li>
 				{{pass}}
 				{{if auth.user.usertype == 'Faculty':}}
-			  	<li><a href="{{=URL('default','facultyInterface')}}">Faculty Interface</a></li>
+			  	<li><a href="{{=URL('default','facultyInterface')}}">Faculty View</a></li>
           <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','facultyInterface')}}">Settings</a></li>
 				{{pass}}
         	  </ul>
         	  <ul class="nav nav-sidebar">
 				{{if auth.user.usertype == 'TA':}}
-				<li><a href="{{=URL('default','studentInterface')}}">Access Student Interface</a></li>
+				<li><a href="{{=URL('default','studentInterface')}}">Student View</a></li>
 				{{pass}}
-        	    <li class="active"><a href="{{=URL('default','get_mark_helper')}}">See Assignment Marks</a></li>
+        	    <li class="active"><a href="{{=URL('default','get_mark_helper')}}">View Marks</a></li>
 				
 				{{if auth.user.usertype == 'Faculty':}}
 				<li><a href="{{=URL('default','autoAssignment')}}">Upload Assignment</a></li>

@@ -112,16 +112,16 @@
 				<div class="col-sm-3 col-md-2 sidebar" style="background-color:lightgrey"> 
 					{{if auth.user.usertype == 'TA':}}
 					<ul class="nav nav-sidebar">
-						<li><a href="{{=URL('default','TAinterface')}}">TA Interface</a></li>       	      
+						<li><a href="{{=URL('default','TAinterface')}}">TA View</a></li>       	      
 					</ul>
 					{{pass}}
 					<ul class="nav nav-sidebar">
-						<li><a href="{{=URL('default','student_home')}}">Student Interface</a></li>       	      
+						<li><a href="{{=URL('default','student_home')}}">Student View</a></li>       	      
 					</ul>
 					<ul class="nav nav-sidebar">
-						<li><a href="{{=URL('default','studupload')}}">Upload a solution</a></li>
+						<li><a href="{{=URL('default','studupload')}}">Submit Solution</a></li>
 						<li><a href="{{=URL('default','registerCourse')}}">Register for a Course</a></li>
-						<li><a href="{{=URL('default','assignstatus')}}">Assignments by Deadline</a></li>
+						<li><a href="{{=URL('default','assignstatus')}}">Assignments</a></li>
 						<li class="active"><a href="{{=URL('default','see_marks')}}">Marks</a></li>
 						<li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','student_home')}}">Settings</a></li>
 					</ul>
