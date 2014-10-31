@@ -39,7 +39,7 @@ def student_home():
 	return locals()
 
 def see_marks():
-	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign) & (db.Submission.problem == db.Problem.id)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id,db.Submission.id)	
+	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
 	return locals()
 
 def see_submission():
