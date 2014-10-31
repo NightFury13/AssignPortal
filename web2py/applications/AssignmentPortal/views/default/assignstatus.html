@@ -149,6 +149,7 @@
 		<th>Assignment Name</th>
 		<th data-sorter="shortDate" date-date-format="yyyymmdd">Deadline</th>
 		<th>Status</th>
+		<th>Progress</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -159,6 +160,9 @@
 				<td>{{=current_assigns[i]['name']}}</td>
 				<td>{{=current_assigns[i]['end_time']}}</td>
 				<td><a href={{=URL('default','studupload?assign=%s' % current_assigns[i]['id'])}}>Sumbit Now</a></td>
+				{{x=len(db(db.Problem.assign==current_assigns[i]['id']).select(db.Problem.id))}}
+				{{submitted_count=len(db((db.Submission.student==auth.user.id)&(db.Submission.assign==current_assigns[i]['id'])).select(db.Submission.id))}}
+				<td>{{=submitted_count}}/{{=x}}</td>
 			</tr>
 		{{pass}}
 		{{else:}}
@@ -166,7 +170,10 @@
 		<tr>
 			<td>{{=past_assigns[i]['name']}}</td>
 			<td>{{=past_assigns[i]['end_time']}}</td>
-			<td>hahah</td>
+			<td>Deadline Passed</td>
+			{{x=len(db(db.Problem.assign==past_assigns[i]['id']).select(db.Problem.id))}}
+			{{submitted_count=len(db((db.Submission.student==auth.user.id)&(db.Submission.assign==past_assigns[i]['id'])).select(db.Submission.id))}}
+				<td>{{=submitted_count}}/{{=x}}</td>
 		</tr>	
 		{{pass}}
 		{{pass}}
