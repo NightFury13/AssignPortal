@@ -65,7 +65,7 @@
             	<span class="icon-bar"></span>
             	<span class="icon-bar"></span>
           	  </button>
-          	  <a class="navbar-brand" href="{{=URL('default','studentInterface')}}">Shiksha</a>
+          	  <a class="navbar-brand" href="{{=URL('default','index')}}">Shiksha</a>
         	</div>
         	<div class="navbar-collapse collapse">
           		<ul class="nav navbar-nav navbar-right">
@@ -84,14 +84,14 @@
                 </ul>
                {{pass}}
 	        	  <ul class="nav nav-sidebar">
-	        	    <li><a href="{{=URL('default','studentInterface')}}">Student Interface</a></li>
+	        	    <li><a href="{{=URL('default','student_home')}}">Student Interface</a></li>
 		                	      
         	  	  </ul>
         	  	  <ul class="nav nav-sidebar">
         	    	<li class="active"><a href="{{=URL('default','studupload')}}">Upload a solution</a></li>
         	    	<li><a href="{{=URL('default','registerCourse')}}">Register for a Course</a></li>
                 <li><a href="{{=URL('default','assignstatus')}}">Assignments by Deadline</a></li>
-                <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','studentInterface')}}">Settings</a></li>
+                <li><a href="{{=URL('default','user/profile')}}" next="{{=URL('default','student_home')}}">Settings</a></li>
          	   	  </ul>
   	        </div>
   	        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

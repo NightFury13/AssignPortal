@@ -14,7 +14,7 @@
 		</div>
 	{{else:}}
 		{{if auth.user.usertype=='Student':}}
-		{{redirect(URL('default','studentInterface'))}}	
+		{{redirect(URL('default','student_home'))}}	
 		{{pass}}
 		{{if auth.user.usertype=='Faculty':}}
 		{{redirect(URL('default','facultyInterface'))}}	
