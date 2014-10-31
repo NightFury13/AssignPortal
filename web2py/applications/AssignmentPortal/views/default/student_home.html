@@ -36,6 +36,19 @@
 				font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 				z-index: 2000;
 			}
+		th.headerSortUp { 
+			background-image: url({{=URL('static','images/asc.gif')}}); 
+			background-repeat: no-repeat;
+			background-color: #3399FF;
+			background-position:right;
+
+		} 
+			th.headerSortDown { 
+			background-image: url({{=URL('static','images/desc.gif')}}); 
+			background-repeat: no-repeat;
+				        background-color: #3399FF; 
+			background-position:right;
+					} 
 		</style>
 
 		{{
@@ -65,7 +78,7 @@
     });    
 			$(document).ready(function() 
 			{ 
-				$("#myTable").tablesorter(); 
+			$("#myTable").tablesorter({sortList: [[0,0]]}); 
 				}); </script>
 		
 
