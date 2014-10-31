@@ -36,6 +36,20 @@
      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
      z-index: 2000;
      }
+     th.headerSortUp { 
+			background-image: url({{=URL('static','images/asc.gif')}}); 
+			background-repeat: no-repeat;
+			background-color: #3399FF;
+			background-position:right;
+
+		} 
+			th.headerSortDown { 
+			background-image: url({{=URL('static','images/desc.gif')}}); 
+			background-repeat: no-repeat;
+				        background-color: #3399FF; 
+			background-position:right;
+					} 
+	
     </style>
 
     	{{
@@ -49,7 +63,27 @@
   		response.include_meta()
 		
   		}}
-  	
+ 		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
+		<script src="{{=URL('static','js/jquery.tablesorter.js')}}"></script>i
+		<script type="text/javascript"> 
+			$.tablesorter.addParser({
+				    id: "date",
+			        is: function (s) {
+		            return false;
+	        },
+    format: function (s, table) {
+        var date = (s + '').match(/(\d{1,2}\s+\w{3}\s+\d{4}),(\s+\d{1,2}:\d{1,2}:\d{1,2}\s+[AP]M)/);
+            return date ? new Date(date[1] + date[2]).getTime() || s : s;
+        },
+    type: "numeric"
+    });    
+			$(document).ready(function() 
+			{ 
+			$("#myTable").tablesorter({sortList: [[0,0]]}); 
+				}); </script>
+		
+
+ 	
 	</head>
 
 	<body>
@@ -108,21 +142,36 @@
 			</select><br/>
 		<input type='submit' value='Submit'>
 	</form>
-		{{try:}}
-{{if past_flag==0:}}
-{{for i in range(len(current_assigns)):}}
-<a href={{=URL('default','studupload?assign=%s' % current_assigns[i]['id'])}}> {{=current_assigns[i]['name']}}</a>
-Deadline: {{=current_assigns[i]['end_time']}}<br/>
-{{pass}}
-{{else:}}
-<ul>
-{{for i in range(len(past_assigns)):}}
-{{=past_assigns[i]['name']}} Deadline Passed on: {{=past_assigns[i]['end_time']}}<br/>
-{{pass}}
-</ul>
-{{pass}}
-{{except:}}
-{{pass}}
+<table id="myTable" class="tablesorted table table-striped" style="width:100%;">
+	<thead>
+	<tr>
+		<th>Assignment Name</th>
+		<th data-sorter="shortDate" date-date-format="yyyymmdd">Deadline</th>
+		<th>Status</th>
+	</tr>
+	</thead>
+	<tbody>
+	{{if past_flag==0:}}
+		{{for i in range(len(current_assigns)):}}
+		
+		<tr>
+				<td>{{=current_assigns[i]['name']}}</td>
+				<td>{{=current_assigns[i]['end_time']}}</td>
+				<td><a href={{=URL('default','studupload?assign=%s' % current_assigns[i]['id'])}}>Sumbit Now</a></td>
+			</tr>
+		{{pass}}
+		{{else:}}
+		{{for i in range(len(past_assigns)):}}
+		<tr>
+			<td>{{=past_assigns[i]['name']}}</td>
+			<td>{{=past_assigns[i]['end_time']}}</td>
+			<td>hahah</td>
+		</tr>	
+		{{pass}}
+		{{pass}}
+	</tbody>
+</table>
+</div>
 			 	 		</div>
 			  		</div>
 			 	</div>
