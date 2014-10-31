@@ -31,7 +31,7 @@
       position:absolute; 
       top:0;
       right:0;
-      background:url(icon.png);
+      background:url({{=URL('static','images/icon.png')}});
     }
 
     .zoom img {
@@ -92,7 +92,6 @@ div.img img {
   		response.include_meta()
 		
   		}}
-  	
 	</head>
 	<body>
 	{{if response.flash:}}
@@ -148,8 +147,8 @@ div.img img {
 								{{try:}}
 									{{if img:}}
                    <span class='zoom' id='ex3'>
-										<img src="{{=URL('download',args=img['image'])}}" width=500px/>
                     <p>Click to Zoom</p>
+										<img src="{{=URL('download',args=img['image'])}}" width=500px/>
                    </span>
 										<br/>
 										<br/>
@@ -176,7 +175,7 @@ div.img img {
     $(document).ready(function(){
       $('#ex1').zoom();
       $('#ex2').zoom({ on:'grab' });
-      $('#ex3').zoom({ on:'click' });      
+      $('#ex3').zoom({ on:'click', magnify:0.2 });      
       $('#ex4').zoom({ on:'toggle' });
     });
 </script>

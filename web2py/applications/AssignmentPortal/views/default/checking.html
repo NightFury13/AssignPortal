@@ -1,5 +1,5 @@
 <html>
-	<head>
+<head>
    		<meta charset="utf-8">
    		<meta http-equiv="X-UA-Compatible" content="IE=edge">
    		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,8 +14,10 @@
 
     <!-- Custom styles for this template -->
     	<link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
+      <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+      <script src="{{=URL('static','js/jquery.zoom.js')}}"></script>
     	<style>
-        .zoom {
+      .zoom {
       display:inline-block;
       position: relative;
     }
@@ -29,7 +31,7 @@
       position:absolute; 
       top:0;
       right:0;
-      background:{{URL('static','images/icon.png')}};
+      background:url({{=URL('static','images/icon.png')}});
     }
 
     .zoom img {
@@ -38,7 +40,10 @@
 
     .zoom img::selection { background-color: transparent; }
 
-    
+    #ex2 img:hover { cursor: url(grab.cur), default; }
+    #ex2 img:active { cursor: url(grabbed.cur), default; }
+
+
       div.flash {
      font-weight: bold;
      position: fixed;
@@ -59,8 +64,21 @@
      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
      z-index: 2000;
      }
+     div.img {
+    margin: 5px;
+    padding-left: 18%;
+    padding-top: 4%;
+    height: auto;
+    width: auto;
+    float: left;
+    text-align: center;
+}
 
-     
+div.img img {
+    display: inline;
+
+    
+}
     </style>
 
     	{{
@@ -72,16 +90,7 @@
   		response.files.insert(5,URL('static','js/jquery.js'))
   		response.files.insert(6,URL('static','js/web2py.js'))
   		response.include_meta()
-		
-  		}}
-  		
-      <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
-      <script src="{{=URL('static','js/jquery.zoom.js')}}"></script>
-        <script>
-    $(document).ready(function(){
-      $('#ex1').zoom({ on:'click' });      
-    });
-  </script> 	
+	}}
 	</head>
 
 	<body>	
@@ -147,37 +156,38 @@
   	       
             </div>
   </div>
-
+  <div class= "img" style="padding-left:18%;">
                   {{try:}}
 		                {{if submission:}}
-                      <span class='zoom' id='ex1'>
-                       <img style="width:60%;padding-top:4%;padding-left:18%" src="{{=URL('download',args=submission['image'])}}"  />
-                       <p>Click to zoom</p>
+                      <span class='zoom' id='ex3'>
+                        <p>Click to zoom</p>
+                       <img src="{{=URL('download',args=submission['image'])}}" width=500px />
+                       
                       </span>
 			                 <br/>
 			                 <br/>
 		                {{pass}}
-                  {{except:}}
+				{{except:}}
                     {{pass}}
+			</div>
 <!-- The javascript =============================================
        (Placed at the end of the document so the pages load faster) -->
 
   
-  <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
-  <script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
   <!--[if lt IE 7 ]>
       <script src="{{=URL('static','js/dd_belatedpng.js')}}"></script>
       <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
       <![endif]-->
+
   
-  {{if response.google_analytics_id:}}
-  <script src="{{=URL('static','js/analytics.min.js')}}"></script>
-  <script type="text/javascript">
-  analytics.initialize({
-    'Google Analytics':{trackingId:'{{=response.google_analytics_id}}'} 
-  });</script>
-  {{pass}}
-  <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
+  <script>
+  $(document).ready(function(){
+      $('#ex1').zoom();
+      $('#ex2').zoom({ on:'grab' });
+      $('#ex3').zoom({ on:'click', magnify:0.2 });      
+      $('#ex4').zoom({ on:'toggle' });
+    });
+  </script>
 </body>
 </html>
 
