@@ -506,27 +506,26 @@ def assignstatus():
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 
-	if request.vars:
-		assignments = db((auth.user.id==db.StudCourse.student)&(db.StudCourse.course==db.Assign.course)).select(db.Assign.ALL)
-		current_time = datetime.datetime.now()
-		past_flag=0
-		if int(request.vars.sort) == 1:
-			past_flag=1
-			past_assigns=[]
-			for i in assignments:
+	assignments = db((auth.user.id==db.StudCourse.student)&(db.StudCourse.course==db.Assign.course)).select(db.Assign.ALL)
+	current_time = datetime.datetime.now()
+	past_flag=0
+	if request.vars and (int(request.vars.sort) == 1):
+		past_flag=1
+		past_assigns=[]
+		for i in assignments:
+			diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
+			diff_s_time= (time.mktime(current_time.timetuple()) - time.mktime(i['start_time'].timetuple()))
+			if(diff_f_time<0 and diff_s_time>0):
 				diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
-				diff_s_time= (time.mktime(current_time.timetuple()) - time.mktime(i['start_time'].timetuple()))
-				if(diff_f_time<0 and diff_s_time>0):
-					diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
-					past_assigns.append(i)
-		elif int(request.vars.sort) == 2:
-			current_assigns=[]
-			for i in assignments:
+				past_assigns.append(i)
+	else:
+		current_assigns=[]
+		for i in assignments:
+			diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
+			diff_s_time= (time.mktime(current_time.timetuple()) - time.mktime(i['start_time'].timetuple()))
+			if(diff_f_time>0 and diff_s_time>0):
 				diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
-				diff_s_time= (time.mktime(current_time.timetuple()) - time.mktime(i['start_time'].timetuple()))
-				if(diff_f_time>0 and diff_s_time>0):
-					diff_f_time= (time.mktime(i['end_time'].timetuple()) - time.mktime(current_time.timetuple()))
-					current_assigns.append(i)
+				current_assigns.append(i)
 	return locals()
 
 @auth.requires_login()
