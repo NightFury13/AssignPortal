@@ -14,21 +14,35 @@
 
     <!-- Custom styles for this template -->
     	<link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
+      <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+      <script src="{{=URL('static','js/jquery.zoom.js')}}"></script>
     	<style>
-.img-zoom {
-    width: 310px;
-    -webkit-transition: all .2s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    -ms-transition: all .2s ease-in-out;
-}
- 
-.transition {
-    -webkit-transform: scale(2); 
-    -moz-transform: scale(2);
-    -o-transform: scale(2);
-    transform: scale(2);
-}
+      .zoom {
+      display:inline-block;
+      position: relative;
+    }
+    
+    /* magnifying glass icon */
+    .zoom:after {
+      content:'';
+      display:block; 
+      width:33px; 
+      height:33px; 
+      position:absolute; 
+      top:0;
+      right:0;
+      background:url(icon.png);
+    }
+
+    .zoom img {
+      display: block;
+    }
+
+    .zoom img::selection { background-color: transparent; }
+
+    #ex2 img:hover { cursor: url(grab.cur), default; }
+    #ex2 img:active { cursor: url(grabbed.cur), default; }
+
 
       div.flash {
      font-weight: bold;
@@ -133,7 +147,10 @@ div.img img {
 							<div id='search-result'>
 								{{try:}}
 									{{if img:}}
-										<img class="img-zoom" src="{{=URL('download',args=img['image'])}}" width=500px/>
+                   <span class='zoom' id='ex3'>
+										<img src="{{=URL('download',args=img['image'])}}" width=500px/>
+                    <p>Click to Zoom</p>
+                   </span>
 										<br/>
 										<br/>
 									{{pass}}
@@ -156,14 +173,12 @@ div.img img {
 							</div>
 							{{pass}}
               <script>
-  $(document).ready(function(){
-    $('.img-zoom').hover(function() {
-        $(this).addClass('transition');
- 
-    }, function() {
-        $(this).removeClass('transition');
+    $(document).ready(function(){
+      $('#ex1').zoom();
+      $('#ex2').zoom({ on:'grab' });
+      $('#ex3').zoom({ on:'click' });      
+      $('#ex4').zoom({ on:'toggle' });
     });
-  });
 </script>
 	</body>
 </html>
