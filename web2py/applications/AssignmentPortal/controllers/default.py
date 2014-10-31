@@ -44,6 +44,7 @@ def see_marks():
 
 def see_submission():
 	subid = request.vars['subid']
+	revid = request.vars['revid']
 	return locals()
 
 

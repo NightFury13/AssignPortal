@@ -14,8 +14,52 @@
 
 		<!-- Custom styles for this template -->
 		<link href="{{=URL('static','css/dashboard.css')}}" rel="stylesheet">
+		<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+      <script src="{{=URL('static','js/jquery.zoom.js')}}"></script>
 
 		<style>
+		.zoom {
+      display:inline-block;
+      position: relative;
+    }
+    
+    /* magnifying glass icon */
+    .zoom:after {
+      content:'';
+      display:block; 
+      width:33px; 
+      height:33px; 
+      position:absolute; 
+      top:0;
+      right:0;
+      background:url({{=URL('static','images/icon.png')}});
+    }
+
+    .zoom img {
+      display: block;
+    }
+
+    .zoom img::selection { background-color: transparent; }
+
+    #ex2 img:hover { cursor: url(grab.cur), default; }
+    #ex2 img:active { cursor: url(grabbed.cur), default; }
+
+     div.img {
+    margin: 5px;
+    padding-left: 18%;
+    padding-top: 4%;
+    height: auto;
+    width: auto;
+    float: left;
+    text-align: center;
+}
+
+div.img img {
+    display: inline;
+
+    
+}
+
 			div.flash {
 				font-weight: bold;
 				position: fixed;
@@ -130,7 +174,18 @@
 					<br/><br/><br/>
 					<div id="submission">
 						{{sub = db(db.Submission.id == subid).select().first()}}
-						<img src="{{=URL('download',args=sub['image'])}}" width=30%>
+						{{rev=db(db.SubmitReview.id==revid).select().first()}}
+						<div style="float:right">
+							<p>Marks : {{=rev['marks']}}<br/>
+							Comments : {{=rev['comments']}}</p><br/>
+						</div>
+						<div class= "img" style="padding-left:18%;">
+						 <span class='zoom' id='ex3'>
+                        	<p>Click to zoom</p>
+                       		<img src="{{=URL('download',args=sub['image'])}}" width=40%/>
+                       
+                      	 </span>
+						</div>
 					</div>
 
 				</div>
@@ -168,6 +223,13 @@
 							});</script>
 						{{pass}}
 						<script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
-
+ <script>
+  $(document).ready(function(){
+      $('#ex1').zoom();
+      $('#ex2').zoom({ on:'grab' });
+      $('#ex3').zoom({ on:'click', magnify:0.2 });      
+      $('#ex4').zoom({ on:'toggle' });
+    });
+  </script>
 					</body>
 				</html>

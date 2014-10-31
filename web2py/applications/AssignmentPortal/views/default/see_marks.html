@@ -151,8 +151,8 @@
 											<td>
 												Marks: {{=x['marks']}}<br/>
 												Comments: {{=x['comments']}}
-												{{subid=db((db.Submission.student==auth.user.id)&(db.Submission.problem==i['Problem']['id'])).select(db.Submission.id).first()}}
-												<a href={{=URL('default','see_submission?subid=%s' % (subid.id))}}>View Submission</a>
+												{{subid=db((db.Submission.student==auth.user.id)&(db.Submission.problem==i['Problem']['id'])).select(db.Submission.id).first()}} <br/>
+												<a href={{=URL('default','see_submission?subid=%s&revid=%s' % (subid.id, x.id))}}>View Submission</a>
 											</td>
 										</tr>
 										{{pass}}
