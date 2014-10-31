@@ -359,11 +359,12 @@ def checking():
 					session.flash = 'Access Denied'
 					redirect(URL('default','TAinterface'))
 			all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
+			print all_params
 			params = {}
 			for para in all_params:
 				temp = para['param']
 				params[temp] = []
-				opts = db((db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
+				opts = db((db.ProbParam.prob==prob)&(db.ParamOption.param == db.ProbParam.id) & (db.ProbParam.param == temp)).select(db.ParamOption.opt,db.ParamOption.weight)
 				for opt in opts:
 					params[temp].append(opt['opt']+'('+str(opt['weight'])+')')
 		#	except:
