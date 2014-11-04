@@ -36,10 +36,10 @@ def download_pdf():
 
 @auth.requires_login()
 def student_home():
-	if auth.user.usertype == 'Student':
+	if auth.user.usertype == 'Student' or auth.user.usertype == 'TA':
 		stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
 	else:
-		session.flash == 'Access Denied!'
+		response.flash == 'Access Denied!'
 		redirect(URL(r=request,f='index'))
 	return locals()
 
@@ -76,7 +76,7 @@ def course_registeration():
 		elif form.errors:
 			response.flash = 'Error in upload'
 	else:
-		session.flash = 'Access Denied!'
+		response.flash = 'Access Denied!'
 		redirect(URL(r=request,f='index'))
 	return locals()
 
@@ -85,7 +85,7 @@ def see_marks():
 	if auth.user.usertype == 'Student':
 		stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
 	else:
-		session.flash = 'Access Denied!'
+		response.flash = 'Access Denied!'
 		redirect(URL(r=request,f='index'))
 	return locals()
 
@@ -109,7 +109,7 @@ def autoAssignment():
 		else:
 			response.flash = 'upload the assignment as .xml'
 	else:
-		session.flash = 'Access Denied'
+		response.flash = 'Access Denied'
 		redirect(URL(r=request,f='index'))
 	return dict(form=form)
 
@@ -150,7 +150,7 @@ def uploadTarBall():
 		else:
 			response.flash = 'upload the images as a .tar folder'
 	else:
-		session.flash = 'Access Denied!'
+		response.flash = 'Access Denied!'
 		redirect(URL(r=request,f='index'))
 	return dict(form=form)
 
@@ -277,7 +277,7 @@ def get_mark_helper():
 	if auth.user.usertype == 'Faculty' or auth.user.usertype == 'TA':
 		assign=db(db.Assign.id>0).select(db.Assign.id,db.Assign.name)
 	else:
-		session.flash = 'Access Denied!'
+		response.flash = 'Access Denied!'
 		redirect(URL(r=request,f='index'))
 	return locals()
 
@@ -288,7 +288,7 @@ def get_marks():
 		assign_name=db(db.Assign==assign_id).select(db.Assign.name).first()
 		marks=db((db.SubmitReview.assign==assign_id)&(db.SubmitReview.student==db.auth_user.id)).select(db.auth_user.first_name,db.auth_user.last_name,db.auth_user.email,db.auth_user.rollno,db.SubmitReview.problem,db.SubmitReview.marks)
 	else:
-		session.flash = 'Access Denied!'
+		response.flash = 'Access Denied!'
 		redirect(URL(r=request,f='index'))
 	return locals()
 
@@ -420,7 +420,7 @@ def checking():
 					session.flash = 'All Answer Sheets Checked'
 					redirect(URL(r=request,f='TAinterface'))#'AssignmentPortal','default','TAinterface'))
 				else:
-					session.flash = 'Access Denied'
+					response.flash = 'Access Denied'
 					redirect(URL('default','TAinterface'))
 			all_params = db(db.ProbParam.prob == prob).select(db.ProbParam.param)
 			params = {}
@@ -506,7 +506,7 @@ def adminInterface():
 		courses = db(db.Course.id>0).select(db.Course.id,db.Course.name)
 
 	else:
-		session.flash = 'Access Denied'
+		response.flash = 'Access Denied'
 	return locals()
 
 @auth.requires_login()
