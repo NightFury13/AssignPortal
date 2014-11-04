@@ -38,6 +38,37 @@ def student_home():
 	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
 	return locals()
 
+def course_reg_upload(filename,courseid):
+	try:
+		filepath=open(os.path.join(request.folder,'uploads/'+filename))
+		lines=filepath.readlines()
+		for i in lines:
+			email=i.strip()
+			try:
+				userid=db(db.auth_user.email==email).select(db.auth_user.id).first()
+				db.StudCourse.insert(student=userid['id'],course=courseid)
+			except:
+				pass
+		filepath.close()
+	except:
+		pass
+	# delete the files for the current course
+	db(db.BatchRegisteration.course==courseid).delete()
+	db.commit()
+	return locals()
+
+def course_registeration():
+	form=SQLFORM(db.BatchRegisteration)
+	if form.process().accepted:
+                response.flash = 'File Uploaded Successfully'
+		filename=form.vars.upload
+		courseid=form.vars.course
+		popthread = Process(target=course_reg_upload,args=(filename,courseid))
+		popthread.start()
+	elif form.errors:
+		response.flash = 'Error in upload'
+	return locals()
+
 def see_marks():
 	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
 	return locals()
