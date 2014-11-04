@@ -34,8 +34,13 @@ def download_pdf():
 	filename=os.path.join(request.folder,'uploads/'+filename)
 	return response.stream(open(filename,'rb'), chunk_size=10**6)
 
+@auth.requires_login()
 def student_home():
-	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
+	if auth.user.usertype == 'Student':
+		stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
+	else:
+		session.flash == 'Access Denied!'
+		redirect(URL(r=request,f='index'))
 	return locals()
 
 def course_reg_upload(filename,courseid):
@@ -57,80 +62,96 @@ def course_reg_upload(filename,courseid):
 	db.commit()
 	return locals()
 
+@auth.requires_login()
 def course_registeration():
-	form=SQLFORM(db.BatchRegisteration)
-	if form.process().accepted:
-                response.flash = 'File Uploaded Successfully'
-		filename=form.vars.upload
-		courseid=form.vars.course
-		popthread = Process(target=course_reg_upload,args=(filename,courseid))
-		popthread.start()
-	elif form.errors:
-		response.flash = 'Error in upload'
+	form = ''
+	if auth.user.usertype == 'Admin':
+		form=SQLFORM(db.BatchRegisteration)
+		if form.process().accepted:
+			response.flash = 'File Uploaded Successfully'
+			filename=form.vars.upload
+			courseid=form.vars.course
+			popthread = Process(target=course_reg_upload,args=(filename,courseid))
+			popthread.start()
+		elif form.errors:
+			response.flash = 'Error in upload'
+	else:
+		session.flash = 'Access Denied!'
+		redirect(URL(r=request,f='index'))
 	return locals()
 
+@auth.requires_login()
 def see_marks():
-	stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
+	if auth.user.usertype == 'Student':
+		stud_data = db((db.StudCourse.student==auth.user.id) & (db.StudCourse.course==db.Course.id) & (db.Assign.course==db.Course.id) & (db.Assign.id==db.Problem.assign)).select(db.Course.name,db.Assign.name,db.Assign.end_time,db.Problem.num,db.Problem.id,db.Assign.id)	
+	else:
+		session.flash = 'Access Denied!'
+		redirect(URL(r=request,f='index'))
 	return locals()
 
+@auth.requires_login()
 def see_submission():
 	subid = request.vars['subid']
 	revid = request.vars['revid']
 	return locals()
 
-
+@auth.requires_login()
 def autoAssignment():
-	form = SQLFORM(db.AutoAssign)
-	if form.process().accepted:
-		filename = form.vars.upfile	
-		response.flash = 'assignment added'
-		msg = processFile(filename)
-		redirect(URL(r=request,f='index?msg='+msg))
-	elif form.errors:
-		response.flash = 'upload has errors'
+	if auth.user.usertype == 'Faculty':
+		form = SQLFORM(db.AutoAssign)
+		if form.process().accepted:
+			filename = form.vars.upfile	
+			response.flash = 'assignment added'
+			msg = processFile(filename)
+			redirect(URL(r=request,f='index?msg='+msg))
+		elif form.errors:
+			response.flash = 'upload has errors'
+		else:
+			response.flash = 'upload the assignment as .xml'
 	else:
-		response.flash = 'upload the assignment as .xml'
-	
+		session.flash = 'Access Denied'
+		redirect(URL(r=request,f='index'))
 	return dict(form=form)
 
+@auth.requires_login()
 def uploadTarBall():
-	req_course = request.vars['course']
-	if req_course:
-		try:
-			course = db(db.Course.id == req_course).select()
-			if len(course):
-				all_assigns = {}
-				course = course[0]
-				assigns = db(db.Assign.course == course).select()
-				for x in range(len(assigns)):
-					all_assigns[assigns[x].id] = assigns[x].name
-					db.ImageStack.assign.requires = IS_IN_SET(all_assigns)
-		except:
-			pass
-	form = SQLFORM(db.ImageStack)
-	if form.process().accepted:
-		filename = form.vars.upfile
-		course_id = form.vars.course
-		course = db(db.Course.id == course_id).select(db.Course.name).first()
-		course = course.name
-	    #########################################################################################################
-#To-Do: # This here should only show assignments under the specific course selected. Lookup - Cascaded dropdowns#
-	    #########################################################################################################
-		assign_id = form.vars.assign
-		assign = db(db.Assign.id == assign_id).select(db.Assign.name).first()
-		assign = assign.name
-		msg = 'file uploaded successfully, extracting images now. It might take some time...'
-		try:
-			extractThread = Process(target=extractTarBall,args=(filename,course,assign,course_id,assign_id))
-			extractThread.start()
-		except:
-			msg = 'background process creation for image extraction failed'
-		redirect(URL(r=request,f='index?msg='+msg))
-	elif form.errors:
-		response.flash = 'upload has errors'
+	if auth.user.usertype == 'Admin':
+		req_course = request.vars['course']
+		if req_course:
+			try:
+				course = db(db.Course.id == req_course).select()
+				if len(course):
+					all_assigns = {}
+					course = course[0]
+					assigns = db(db.Assign.course == course).select()
+					for x in range(len(assigns)):
+						all_assigns[assigns[x].id] = assigns[x].name
+						db.ImageStack.assign.requires = IS_IN_SET(all_assigns)
+			except:
+				pass
+		form = SQLFORM(db.ImageStack)
+		if form.process().accepted:
+			filename = form.vars.upfile
+			course_id = form.vars.course
+			course = db(db.Course.id == course_id).select(db.Course.name).first()
+			course = course.name
+			assign_id = form.vars.assign
+			assign = db(db.Assign.id == assign_id).select(db.Assign.name).first()
+			assign = assign.name
+			msg = 'file uploaded successfully, extracting images now. It might take some time...'
+			try:
+				extractThread = Process(target=extractTarBall,args=(filename,course,assign,course_id,assign_id))
+				extractThread.start()
+			except:
+				msg = 'background process creation for image extraction failed'
+			redirect(URL(r=request,f='index?msg='+msg))
+		elif form.errors:
+			response.flash = 'upload has errors'
+		else:
+			response.flash = 'upload the images as a .tar folder'
 	else:
-		response.flash = 'upload the images as a .tar folder'
-
+		session.flash = 'Access Denied!'
+		redirect(URL(r=request,f='index'))
 	return dict(form=form)
 
 def insertImageToDB(imagepath,filename,course_id,assign_id):
@@ -203,11 +224,6 @@ def processFile(filename):
 	
 			for ta_mail in ta_list:
 				ta_id = db(db.auth_user.email == ta_mail).select(db.auth_user.id,db.auth_user.email)[0]
-
-			########################################################################################
-			## We need to take care of something like making the user a TA if he aint already one ##
-			########################################################################################
-
 				db.TaProb.insert(ta=ta_id['id'],prob=prob_id)
 				os.system('echo "You have been alloted a new question to check. Check ___server address___" | mail -s NewQuestionAlloted'+ta_id['email'])
 		mail_data = db((db.StudCourse.course == course_id) & (db.StudCourse.student == db.auth_user.id)).select(db.auth_user.email)
@@ -218,7 +234,7 @@ def processFile(filename):
 		msg = 'xml-file parse failed'
 	return msg
 
-
+@auth.requires_login()
 def solutionImageTag():
     if auth.user.usertype=='Student' or auth.user.usertype=='TA':
         msg = 'Access Denied!'
@@ -256,16 +272,24 @@ def solutionImageTag():
     return locals()
 
 
-#To Do authentication required
+@auth.requires_login()
 def get_mark_helper():
-	assign=db(db.Assign.id>0).select(db.Assign.id,db.Assign.name)
+	if auth.user.usertype == 'Faculty' or auth.user.usertype == 'TA':
+		assign=db(db.Assign.id>0).select(db.Assign.id,db.Assign.name)
+	else:
+		session.flash = 'Access Denied!'
+		redirect(URL(r=request,f='index'))
 	return locals()
 
-#To Do authentication required
+@auth.requires_login()
 def get_marks():
-	assign_id=request.vars.assign
-	assign_name=db(db.Assign==assign_id).select(db.Assign.name).first()
-	marks=db((db.SubmitReview.assign==assign_id)&(db.SubmitReview.student==db.auth_user.id)).select(db.auth_user.first_name,db.auth_user.last_name,db.auth_user.email,db.auth_user.rollno,db.SubmitReview.problem,db.SubmitReview.marks)
+	if auth.user.usertype == 'Faculty' or auth.user.usertype == 'TA':
+		assign_id=request.vars.assign
+		assign_name=db(db.Assign==assign_id).select(db.Assign.name).first()
+		marks=db((db.SubmitReview.assign==assign_id)&(db.SubmitReview.student==db.auth_user.id)).select(db.auth_user.first_name,db.auth_user.last_name,db.auth_user.email,db.auth_user.rollno,db.SubmitReview.problem,db.SubmitReview.marks)
+	else:
+		session.flash = 'Access Denied!'
+		redirect(URL(r=request,f='index'))
 	return locals()
 
 @auth.requires_login()
@@ -622,13 +646,6 @@ def facultyInterface():
 		msg = 'Access Denied!'
 		redirect(URL(r=request,f='index?msg=%s' % (msg)))
 	return locals()
-		
-		
-		#########################################################################################################################
-#To-Do: # Can we use this feature of 'group membership' (used below in controller) for our TA/Admin/Faculty/Student interfaces? #
-		# Never used this before. @auth.requires_membership('group name')														#
-		#########################################################################################################################
-	
 
 def user():
     """
