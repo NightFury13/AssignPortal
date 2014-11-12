@@ -97,7 +97,7 @@ def see_submission():
 
 @auth.requires_login()
 def autoAssignment():
-	if auth.user.usertype == 'Faculty':
+	if auth.user.usertype == 'Faculty' or auth.user.usertype == 'TA':
 		form = SQLFORM(db.AutoAssign)
 		if form.process().accepted:
 			filename = form.vars.upfile	
